@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.log4jtoxml.fromprop;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverterBaseTest;
@@ -14,26 +9,22 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- *
- * @author Jakub
- */
 public class ConfigurationConverterFromPropTest extends ConfigurationConverterBaseTest{
     
     @Before
     public void setUp() {
         converter = new ConfigurationConverterFromPropToXml();
+        classLoader = getClass().getClassLoader();
     }
     
     @Test
     public void baseTest() {
-        ClassLoader cl = getClass().getClassLoader();
-        File input = new File(cl.getResource("fromProp/input/in01.properties").getPath());
-        File output = new File(cl.getResource("fromProp/output/out01.xml").getPath());
+        File input = new File(classLoader.getResource("fromProp/input/in01.properties").getPath());
+        File output = new File(classLoader.getResource("fromProp/output/out01.xml").getPath());
         
         converter.convert(input, output);
         
-        File original = new File(cl.getResource("fromProp/original/orig01.xml").getPath());
+        File original = new File(classLoader.getResource("fromProp/original/orig01.xml").getPath());
         
         try {
             compareFiles(original, output); 
@@ -45,8 +36,26 @@ public class ConfigurationConverterFromPropTest extends ConfigurationConverterBa
             //readLine failed
             fail("readLine throw exception");
         }
+        throw new 
     }
     
     //after test delete files in outpu??
     
+    @Test(expected = Exception.class)
+    public void wongOutputFileTest() {
+        File input = new File(classLoader.getResource("fromProp/input/in01.properties").getPath());
+        File output = new File(classLoader.getResource("fromProp/input/in01.properties").getPath());
+        converter.convert(input, output);
+        //throw exception
+        fail("Converter convert");
+    }
+    
+    @Test(expected = Exception.class) //make special exception
+    public void convertunvalidFileTest() {
+        // create unvalid file
+        File input = new File(classLoader.getResource("fromProp/input/unvalid_in01.properties").getPath());
+        convert.convert(input);
+        //throw exception
+        fail("Unvalid file was converted");
+    }
 }
