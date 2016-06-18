@@ -11,7 +11,7 @@ import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
  *
  * @author Jakub
  */
-public class Appender extends Log4j {
+public class Appender extends Log4jObject {
 
     public Appender(String name, String value) {
         super(name, value);

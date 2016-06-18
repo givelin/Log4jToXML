@@ -11,7 +11,7 @@ import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
  *
  * @author Jakub
  */
-public class Filters extends Log4j {
+public class Filters extends Log4jObject {
 
     public Filters(String name, String value) {
         super(name, value);

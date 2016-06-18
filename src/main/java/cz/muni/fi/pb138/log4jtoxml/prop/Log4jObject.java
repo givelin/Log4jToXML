@@ -12,11 +12,11 @@ import java.util.Objects;
  *
  * @author Jakub
  */
-public class Log4j {
+public class Log4jObject {
     protected String name;
     protected String value;
 
-    public Log4j(String name, String value) {
+    public Log4jObject(String name, String value) {
         this.name = name;
         this.value = value;
     }
@@ -53,7 +53,7 @@ public class Log4j {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Log4j other = (Log4j) obj;
+        final Log4jObject other = (Log4jObject) obj;
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }

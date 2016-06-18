@@ -11,7 +11,7 @@ import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
  *
  * @author Jakub
  */
-public class Loggers extends Log4j {
+public class Loggers extends Log4jObject {
 
     public Loggers(String name, String value) {
         super(name, value);
