@@ -2,6 +2,7 @@ package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
 import cz.muni.fi.pb138.log4jtoxml.impl.fileReaders.PropertieReader;
+import cz.muni.fi.pb138.log4jtoxml.impl.fileWriters.XMLWriter;
 import cz.muni.fi.pb138.log4jtoxml.impl.parser.PropertiesParser;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4jObject;
 import java.io.File;
@@ -36,6 +37,8 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
         //data from file sort and prepare
         if (properties==null) throw new NullPointerException(); //change for specific exception
         Set<Log4jObject> data = PropertiesParser.sortAndSave(properties);
+        //wirete data to file
+        XMLWriter.writeData(output, data);      
         
         //take saved data and write it into output file
         //if input file has data, delete it
