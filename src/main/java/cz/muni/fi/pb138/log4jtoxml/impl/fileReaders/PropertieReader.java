@@ -36,5 +36,14 @@ public class PropertieReader {
         Path path = file.toPath();
         Files.lines(path).forEach(line);
         return lines;
+        
+        
+        /*
+         -- or meybe do it like this - no parsing is needed
+        Properties prop = new Properties();
+        InputStream in = getClass().getResourceAsStream("xyz.properties");
+        prop.load(in);
+        
+        */
     }
 }

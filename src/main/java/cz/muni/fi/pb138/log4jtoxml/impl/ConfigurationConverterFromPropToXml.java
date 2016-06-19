@@ -21,14 +21,22 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
     public void convert(File input) {
         //TODO
         //call convert and set outpu with same name and type of xml
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        String name = input.getName();
+        String[] splitName = name.split(".");
+        String outName ="";
+        for(int i =0; i<splitName.length-1;i++) {
+            outName+=splitName[i]+".";
+        }
+        outName+="xml";
+        convert(input, new File(input.getParent(), outName));
     }
 
     @Override
     public void convert(File input, File output) {
         //TODO
         //reading file, get all data
-        Map<String,String> properties = null;
+        Map<String,String> properties = null; // maybe set for saving values Properties
         try {
             properties = PropertieReader.readPropertieFile(input);
         } catch (IOException ex) {
