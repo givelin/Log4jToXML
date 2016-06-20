@@ -21,14 +21,14 @@ public class ValidatorTest {
     public void validXmlTest() {
         //TODO add xml file
         File xml = new File(classLoader.getResource("validator/xmlValid.xml").getPath());
-        Assert.assertTrue(validator.validateConfiguration(xml));
+        Assert.assertTrue(validator.isXMLFileValid(xml));
     }
     
     @Test
     public void unvalidXmlTest() {
         //TODO add xml file
         File xml = new File(classLoader.getResource("validator/xmlUnvalid.xml").getPath());
-        Assert.assertFalse(validator.validateConfiguration(xml));
+        Assert.assertFalse(validator.isXMLFileValid(xml));
     }
     
     

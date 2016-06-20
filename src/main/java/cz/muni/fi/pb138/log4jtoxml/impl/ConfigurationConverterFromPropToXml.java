@@ -1,21 +1,18 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
+import cz.muni.fi.pb138.log4jtoxml.Validator;
 import cz.muni.fi.pb138.log4jtoxml.impl.fileReaders.PropertieReader;
 import cz.muni.fi.pb138.log4jtoxml.impl.fileWriters.XMLWriter;
-import cz.muni.fi.pb138.log4jtoxml.impl.parser.PropertiesParser;
-import cz.muni.fi.pb138.log4jtoxml.prop.Log4jObject;
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 
 /**
  * Implementation of ConfigurationConverter from Prop to XML
  */
 public class ConfigurationConverterFromPropToXml implements ConfigurationConverter {
+
+    protected Validator validator;
 
     @Override
     public void convert(File input) {
@@ -36,20 +33,19 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
     public void convert(File input, File output) {
         //TODO
         //reading file, get all data
-        Map<String,String> properties = null; // maybe set for saving values Properties
-        try {
-            properties = PropertieReader.readPropertieFile(input);
-        } catch (IOException ex) {
-            Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //data from file sort and prepare
-        if (properties==null) throw new NullPointerException(); //change for specific exception
-        Set<Log4jObject> data = PropertiesParser.sortAndSave(properties);
-        //wirete data to file
-        XMLWriter.writeData(output, data);      
+        Properties properties = PropertieReader.readPropertieFile(input);
+
+        XMLWriter.writeData(output, properties);
         
-        //take saved data and write it into output file
-        //if input file has data, delete it
+        if(validator==null) {
+            validator = new ValidatorImpl();
+        }
+        if(validator.isXMLFileValid(output)) {
+            // somethink like System.out.println("Have a nice day, Mr. Bond");
+        } else {
+            //throw exception about non valid output
+        }
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

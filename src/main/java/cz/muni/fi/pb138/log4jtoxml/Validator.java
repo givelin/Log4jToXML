@@ -17,5 +17,5 @@ public interface Validator {
      * @param file Input
      * @return Return true if configuration file is valid, else return false
      */
-    public boolean validateConfiguration(File file);
+    public boolean isXMLFileValid(File file);
 }

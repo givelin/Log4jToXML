@@ -6,44 +6,25 @@
 package cz.muni.fi.pb138.log4jtoxml.impl.fileReaders;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Jakub
  */
 public class PropertieReader {
-    
-    private static Map<String,String> lines;
-    
-    private static Consumer<String> line = new Consumer<String>() {
 
-        public void accept(String s) {
-            if(s!=null) {
-                String[] parseS = s.split("=");
-                lines.put(parseS[0], parseS[1]);
-            }
+    public static Properties readPropertieFile(File file) {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(file));
+        } catch (IOException ex) {
+            Logger.getLogger(PropertieReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-    };
-    
-    public static Map<String, String> readPropertieFile(File file) throws IOException {
-        lines = new HashMap<>();
-        Path path = file.toPath();
-        Files.lines(path).forEach(line);
-        return lines;
-        
-        
-        /*
-         -- or meybe do it like this - no parsing is needed
-        Properties prop = new Properties();
-        InputStream in = getClass().getResourceAsStream("xyz.properties");
-        prop.load(in);
-        
-        */
+        return properties;
     }
 }

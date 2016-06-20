@@ -15,7 +15,7 @@ import java.io.File;
 public class ValidatorImpl implements Validator {
 
     @Override
-    public boolean validateConfiguration(File file) {
+    public boolean isXMLFileValid(File file) {
         //TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

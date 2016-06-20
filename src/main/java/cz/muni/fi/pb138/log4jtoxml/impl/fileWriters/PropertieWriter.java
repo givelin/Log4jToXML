@@ -36,4 +36,14 @@ public class PropertieWriter {
             Logger.getLogger(PropertieWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static void writeData(File output, Properties properties) {
+        try {
+            properties.store(new FileOutputStream(output), null);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PropertieWriter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PropertieWriter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

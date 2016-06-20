@@ -7,6 +7,7 @@ package cz.muni.fi.pb138.log4jtoxml.impl.fileWriters;
 
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4jObject;
 import java.io.File;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Set;
 public class XMLWriter {
     //class for writing data into file
     
-    public static void writeData(File output, Set<Log4jObject> data) {
+    public static void writeData(File output, Properties properties) {
     
     }
 }

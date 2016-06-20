@@ -1,12 +1,18 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
+import cz.muni.fi.pb138.log4jtoxml.Validator;
+import cz.muni.fi.pb138.log4jtoxml.impl.fileReaders.XMLReader;
+import cz.muni.fi.pb138.log4jtoxml.impl.fileWriters.PropertieWriter;
 import java.io.File;
+import java.util.Properties;
 
 /**
  * Implementation of ConfigurationConverter from XML to Prop
  */
 public class ConfigurationConverterFromXmlToProp implements ConfigurationConverter {
+
+    protected Validator validator;
 
     @Override
     public void convert(File input) {
@@ -26,6 +32,18 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
     @Override
     public void convert(File input, File output) {
         //TODO
+        if(validator==null) {
+            validator = new ValidatorImpl();
+        }
+        if(validator.isXMLFileValid(input)) {
+        //ok skip
+        } else {
+        //throw unvalid exception...
+        }
+
+        Properties properties = XMLReader.readXMLFile(input);
+        PropertieWriter.writeData(output, properties);
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
