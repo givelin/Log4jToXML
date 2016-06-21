@@ -190,6 +190,17 @@ public class XMLWriter {
 
     private static Element createLoggersElement(Properties properties) {
     //TODO
+        Element loggersElement = document.createElement(XMLConst.LOGGERS);
+        Set<String> propNames = properties.stringPropertyNames();
+        for(String name : propNames) {
+            if(!name.startsWith(PropertiesConst.LOGGER)) {
+                propNames.remove(name);
+            }
+        }
+        //same as appender
+        if(loggersElement.hasChildNodes()) {
+            return loggersElement;
+        }
         return null;
     }
     
