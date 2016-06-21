@@ -20,4 +20,17 @@ public class XMLConst {
     public static final String ADVERTISER="advertiser";
     public static final String SCHEMA="schema";
     public static final String[] configAttributes = {PACKAGES,STATUS,SCRIPT,NAME,ADVERTISER,SCHEMA};
+    
+    //configuration childs
+    public static final String CUSTOM_LEVELS = "CustomLevels";
+    public static final String CUSTOM_LEVEL = "CustomLevel";
+    public static final String PROPERTIES = "Properties";
+    public static final String FILTERS = "Filters";
+    public static final String THRESHOL_FILTER = "ThresholdFilter";
+    public static final String APPENDERS = "Appenders";
+    public static final String LOGGERS = "Loggers";
+
+    public static final String PROPERTY = "Property";
+    
+    public static final String FILTER = "Filter";
 }

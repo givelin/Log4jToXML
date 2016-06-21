@@ -27,6 +27,8 @@ public class PropertiesConst {
     public static final String RESET = "reset";
     public static final String ROOT = "root";
     
+    public static final String PROPERTY = "property";
+    
     public static String joinConst(String frst, String scnd) {
         return frst + "." + scnd;
     }
