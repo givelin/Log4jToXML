@@ -103,7 +103,6 @@ public class CreateLoggersElement {
     private static Element createLogFilter(Document document, Properties properties, Set<String> filterPropNames) {
         Element filterEl = document.createElement(XMLConst.FILTER);
         String[] splitSubName = filterPropNames.iterator().next().split(".");
-        //String filterTag = splitSubName[3];
         String filterPrefix = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2]+"."+splitSubName[3];
         
         filterEl.setAttribute("type", properties.getProperty(filterPrefix+".type"));

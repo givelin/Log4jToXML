@@ -5,6 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
+import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Properties;
 import java.util.Set;
@@ -18,13 +19,55 @@ import org.w3c.dom.Element;
 public class CreateFiltersElement {
         
     public static Element createFiltersElement(Document document, Properties properties) {
-    //TODO
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
+            if(name.startsWith(PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD)) {
+                continue;
+            }
+            String[] split = name.split(".");
+            String filterType = split[1];
+            String filterPrefix = PropertiesConst.FILTER + "." + filterType;
+
             //find filters
-            Element filter = document.createElement(XMLConst.FILTER);
-            //add atributes
+            Element filter = document.createElement(properties.getProperty(XMLConst.FILTER));
+            propNames.remove(filterPrefix + ".type");
+
+            filter.setAttribute("type", properties.getProperty(filterPrefix + ".type"));
+            propNames.remove(filterPrefix + ".type");
+            if (propNames.contains(filterPrefix + ".level")) {
+                filter.setAttribute("level", properties.getProperty(filterPrefix + ".level"));
+                propNames.remove(filterPrefix + ".level");
+            }
+            if (propNames.contains(filterPrefix + ".marker")) {
+                filter.setAttribute("marker", properties.getProperty(filterPrefix + ".marker"));
+                propNames.remove(filterPrefix + ".marker");
+            }
+            if (propNames.contains(filterPrefix + ".onMatch")) {
+                filter.setAttribute("onMatch", properties.getProperty(filterPrefix + ".onMatch"));
+                propNames.remove(filterPrefix + ".onMatch");
+            }
+            if (propNames.contains(filterPrefix + ".onMismatch")) {
+                filter.setAttribute("onMismatch", properties.getProperty(filterPrefix + ".onMismatch"));
+                propNames.remove(filterPrefix + ".onMismatch");
+            }
+            boolean containKeyPair = false;
+            for (String s : propNames) {
+                if (s.startsWith(filterPrefix + ".pair")) {
+                    containKeyPair = true;
+                    break;
+                }
+            }
+            if (containKeyPair) {
+                Element keyPair = document.createElement(properties.getProperty(filterPrefix + ".pair.type"));
+                propNames.remove(filterPrefix + ".pair.type");
+                keyPair.setAttribute("key", properties.getProperty(filterPrefix + ".pair.key"));
+                propNames.remove(filterPrefix + ".pair.key");
+                keyPair.setAttribute("value", properties.getProperty(filterPrefix + ".pair.value"));
+                propNames.remove(filterPrefix + ".pair.value");
+                filter.appendChild(keyPair);
+            }
+
             filtersElement.appendChild(filter);
         }
         if(filtersElement.hasChildNodes()) {
