@@ -17,15 +17,19 @@ import org.w3c.dom.Element;
  */
 public class CreateCustomLevels {
     public static Element createCustomLevels(Document document, Properties properties) {
-    //TODO
         Element customLevels = document.createElement(XMLConst.CUSTOM_LEVELS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
-            //find customLevel
-            Element customLevel = document.createElement(XMLConst.CUSTOM_LEVEL);
-            customLevel.setAttribute("name", name);//add
-            customLevel.setAttribute("intLevel", name);//add
+            if(name.startsWith("customLevel")) {
+                String[] split = name.split(".");
+                String prefix = split[0]+"."+split[1];
+                Element customLevel = document.createElement(XMLConst.CUSTOM_LEVEL);
+            customLevel.setAttribute("name", properties.getProperty(prefix+".name"));
+            propNames.remove(prefix+".name");
+            customLevel.setAttribute("intLevel", properties.getProperty(prefix+".intLevel"));
+            propNames.remove(prefix+".intLevel");
             customLevels.appendChild(customLevel);
+            }
         }
         if(customLevels.hasChildNodes()) {
             return customLevels;

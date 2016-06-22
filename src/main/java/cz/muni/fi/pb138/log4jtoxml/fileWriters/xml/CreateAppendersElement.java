@@ -20,7 +20,6 @@ import org.w3c.dom.Element;
  */
 public class CreateAppendersElement {
     public static Element createAppendersElement(Document document, Properties properties) {
-    //TODO
         Element appendersElement = document.createElement(XMLConst.APPENDERS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
@@ -46,19 +45,72 @@ public class CreateAppendersElement {
         if(propNames.contains(prefix+".fileName")) {
             appendeer.setAttribute("fileName", properties.getProperty(prefix+".fileName"));
         }
-        appendeer.appendChild(appenderLayout());
-        appendeer.appendChild(appenderFilters());
-        //maybe more...
+        appendeer.appendChild(appenderLayout(document, properties, propNames, prefix));
+        appendeer.appendChild(appenderFilters(document, properties, propNames, prefix));
         return appendeer;
     }
-    private static Element appenderLayout() {
-    //TODO
+    private static Element appenderLayout(Document document, Properties properties, Set<String> propNames, String prefix) {
+        if(propNames.contains(prefix+".layout.type")) {
+            Element layout = document.createElement(properties.getProperty(prefix+".layout.type"));
+            layout.setAttribute("pattern", properties.getProperty(prefix+"layout.pattern"));
+            return layout;
+        }
         return null;
     }
-    private static Element appenderFilters() {
-    //TODO
+    private static Element appenderFilters(Document document, Properties properties, Set<String> propNames, String prefix) {
+        Element filtersElement = document.createElement(XMLConst.FILTERS);
+        Set<String> appenderFilters = getAppenderFilterPropNames(properties, prefix);
+        while(!appenderFilters.isEmpty()) {
+            filtersElement.appendChild(createAppendFilter(document, properties, appenderFilters));
+        }
+        if(filtersElement.hasChildNodes()) {
+            return filtersElement;
+        }
         return null;
     }
+
+    private static Element createAppendFilter(Document document, Properties properties, Set<String> filterPropNames) {
+        Element filterEl = document.createElement(XMLConst.FILTER);
+        String[] splitSubName = filterPropNames.iterator().next().split(".");
+        String filterPrefix = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
+        
+        filterEl.setAttribute("type", properties.getProperty(filterPrefix+".type"));
+        filterPropNames.remove(filterPrefix+".type");
+        if(filterPropNames.contains(filterPrefix+".level")) {
+            filterEl.setAttribute("level", properties.getProperty(filterPrefix+".level"));
+            filterPropNames.remove(filterPrefix+".level");
+        }
+        if(filterPropNames.contains(filterPrefix+".marker")) {
+            filterEl.setAttribute("marker", properties.getProperty(filterPrefix+".marker"));
+            filterPropNames.remove(filterPrefix+".marker");
+        }
+        if(filterPropNames.contains(filterPrefix+".onMatch")) {
+            filterEl.setAttribute("onMatch", properties.getProperty(filterPrefix+".onMatch"));
+            filterPropNames.remove(filterPrefix+".onMatch");
+        }
+        if(filterPropNames.contains(filterPrefix+".onMismatch")) {
+            filterEl.setAttribute("onMismatch", properties.getProperty(filterPrefix+".onMismatch"));
+            filterPropNames.remove(filterPrefix+".onMismatch");
+        }
+        boolean containKeyPair = false;
+        for(String s : filterPropNames) {
+            if(s.startsWith(filterPrefix+".pair")) {
+                containKeyPair = true;
+                break;
+            }
+        }
+        if(containKeyPair) {
+            Element keyPair = document.createElement(properties.getProperty(filterPrefix+".pair.type"));
+            filterPropNames.remove(filterPrefix+".pair.type");
+            keyPair.setAttribute("key", properties.getProperty(filterPrefix+".pair.key"));
+            filterPropNames.remove(filterPrefix+".pair.key");
+            keyPair.setAttribute("value", properties.getProperty(filterPrefix+".pair.value"));
+            filterPropNames.remove(filterPrefix+".pair.value");
+            filterEl.appendChild(keyPair);
+        }
+        return filterEl;
+    }
+    
     private static Set<String> getAppendersOfOneType(Set<String> names) {
         if(names.isEmpty()) return Collections.EMPTY_SET;
         String firstName = names.iterator().next();
@@ -67,9 +119,17 @@ public class CreateAppendersElement {
         for(String n : names) {
             if(n.startsWith(splitName[0]+"."+splitName[1])) {
                 out.add(n);
-                names.remove(n);
             }
         }
         return out;
+    }
+    private static Set<String> getAppenderFilterPropNames(Properties properties, String prefix) {
+        Set<String> names = new HashSet<>();
+        for (String s : properties.stringPropertyNames()) {
+            if(s.startsWith(prefix+".filter")) {
+                names.add(s);
+            }
+        }
+        return names;
     }
 }
