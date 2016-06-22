@@ -889,7 +889,7 @@
         <xs:attribute name="port" type="xs:integer" use="required"/>
     </xs:complexType>
     <!--AppenderRef type-->
-    <xs:complexType>
+    <xs:complexType name="AppenderRefType">
         <xs:attribute name="ref" type="xs:string"/>
     </xs:complexType>
     <!--CompressionType type-->
@@ -1030,6 +1030,23 @@
     <!--Looger type-->
     <xs:compexType name="LoggerType">
         <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:sequence>
+                    <xs:element name="Filters" type="FiltersType" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="BurstFilter" type="BurstFilterType"/>
+                    <xs:element name="DynamicThresholdFilter" type="DynamicThresholdFilterType"/>
+                    <xs:element name="MapFilter" type="MapFilterType"/>
+                    <xs:element name="MarkerFilter" type="MarkerFilterType"/>
+                    <xs:element name="RegexFilter" type="RegexFilterType"/>
+                    <xs:element name="ScriptFilter" type="ScriptFilterType"/>
+                    <xs:element name="StructuredDataFilter" type="StructuredDataFilterType"/>
+                    <xs:element name="ThreadContextMapFilter" type="ThreadContextMapFilterType"/>
+                    <xs:element name="ThresholdFilter" type="TresholdFilterType"/>
+                    <xs:element name="TimeFilter" type="TimeFilterType"/>
+                </xs:choice>
+            </xs:choice>
             <xs:element name="AppenderRef" type="AppenderRefType"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
@@ -1090,6 +1107,11 @@
             <xs:enumeration value="DENY"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--PatternMatch type for MarkerPatternSelector of PatternLayout-->
+    <xs:complexType name="PatternMatchType">
+        <xs:attribute name="key" type="xs:string" use="required"/>
+        <xs:attribute name="pattern" type="xs:string" use="required"/>
+    </xs:complexType>
     <!--Properties group-->
     <xs:complexType name="PropertiesType">
         <xs:sequence>
@@ -1101,6 +1123,30 @@
         <xs:sequence>
             <xs:element name="Property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
+    </xs:complexType>
+    <!--RootType for loggers-->
+    <xs:complexType name="RootType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:sequence>
+                    <xs:element name="Filters" type="FiltersType" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="BurstFilter" type="BurstFilterType"/>
+                    <xs:element name="DynamicThresholdFilter" type="DynamicThresholdFilterType"/>
+                    <xs:element name="MapFilter" type="MapFilterType"/>
+                    <xs:element name="MarkerFilter" type="MarkerFilterType"/>
+                    <xs:element name="RegexFilter" type="RegexFilterType"/>
+                    <xs:element name="ScriptFilter" type="ScriptFilterType"/>
+                    <xs:element name="StructuredDataFilter" type="StructuredDataFilterType"/>
+                    <xs:element name="ThreadContextMapFilter" type="ThreadContextMapFilterType"/>
+                    <xs:element name="ThresholdFilter" type="TresholdFilterType"/>
+                    <xs:element name="TimeFilter" type="TimeFilterType"/>
+                </xs:choice>
+            </xs:choice>
+            <xs:element name="AppenderRef" type="AppenderRefType"/>
+        </xs:sequence>
+        <xs:attribute name="level" type="xs:string" use="required"/>
     </xs:complexType>
     <!--Single Property type-->
     <xs:complexType name="PropertyType">
@@ -1116,6 +1162,7 @@
     <xs:complexType name="ScriptPatternSelectorType">
         <xs:sequence>
             <xs:element name="Script" type="ScriptType"/>
+            <xs:element name="PatternMatch" type="PatternMatchType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="defaultPattern" type="xs:string" use="required"/>
     </xs:complexType>
