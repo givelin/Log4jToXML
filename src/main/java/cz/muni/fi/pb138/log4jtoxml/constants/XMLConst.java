@@ -36,4 +36,6 @@ public class XMLConst {
     
     public static final String LOGGER = "Logger";
     public static final String ROOT = "Root";
+    
+    public static final String APPENDE_REF = "AppenderRef";
 }
