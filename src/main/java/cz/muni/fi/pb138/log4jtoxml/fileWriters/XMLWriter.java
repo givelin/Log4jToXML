@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.muni.fi.pb138.log4jtoxml.impl.fileWriters;
+package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 
 import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
@@ -197,11 +197,60 @@ public class XMLWriter {
                 propNames.remove(name);
             }
         }
+        
         //same as appender
+        while(!propNames.isEmpty()) {
+            loggersElement.appendChild(createLoggerElement(propNames, properties));
+        }
+
+        loggersElement.appendChild(createRootLoggerElement(properties));
         if(loggersElement.hasChildNodes()) {
             return loggersElement;
         }
         return null;
+    }
+    private static Element createLoggerElement(Set<String> propNames, Properties properties) {
+    //TODO
+        Element loggerEl = document.createElement(XMLConst.LOGGER);
+        String firstName = propNames.iterator().next();
+        String[] splitName = firstName.split(".");
+        String prefix = splitName[0]+"."+splitName[1];
+        //set atributes
+        loggerEl.setAttribute("name", properties.getProperty(prefix+".name"));
+        propNames.remove(prefix+".name");
+        if(propNames.contains(prefix+".level")) {
+            loggerEl.setAttribute("level", properties.getProperty(prefix+".level"));
+            propNames.remove(prefix+".level");
+        }
+        if(propNames.contains(prefix+".additivity")) {
+            loggerEl.setAttribute("additivity", properties.getProperty(prefix+".additivity"));
+            propNames.remove(prefix+".additivity");
+        }
+        //create child filters and create child appender ref        
+/*        <xs:complexType name="LoggerType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:element name="Filters" type="FiltersType"/>
+                <xs:element name="Filter" type="FilterType"/>
+            </xs:choice>
+            <xs:element name="AppenderRef" type="AppenderRefType"/>
+        </xs:sequence>
+*/
+        
+        return loggerEl;
+    }
+    private static Element createRootLoggerElement(Properties properties) {
+    //TODO
+        Element rootLogger = document.createElement(XMLConst.ROOT);
+        rootLogger.setAttribute("level", properties.getProperty(PropertiesConst.ROOT_LOGGER+".level"));
+        //add AppendeerRef
+        
+    /*<xs:complexType name="RootType">
+        <xs:sequence>
+            <xs:element name="AppenderRef" type="AppenderRefType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+</xs:complexType>*/
+        return rootLogger;
     }
     
     private static void setConfigurationAttributes(Properties properties, Element configuration) {

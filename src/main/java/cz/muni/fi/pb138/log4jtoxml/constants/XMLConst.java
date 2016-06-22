@@ -33,4 +33,7 @@ public class XMLConst {
     public static final String PROPERTY = "Property";
     
     public static final String FILTER = "Filter";
+    
+    public static final String LOGGER = "Logger";
+    public static final String ROOT = "Root";
 }

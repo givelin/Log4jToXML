@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.muni.fi.pb138.log4jtoxml.impl.fileWriters;
+package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4jObject;
 import java.io.File;

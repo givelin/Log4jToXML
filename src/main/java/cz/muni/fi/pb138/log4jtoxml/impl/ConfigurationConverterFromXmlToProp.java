@@ -2,8 +2,8 @@ package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
 import cz.muni.fi.pb138.log4jtoxml.Validator;
-import cz.muni.fi.pb138.log4jtoxml.impl.fileReaders.XMLReader;
-import cz.muni.fi.pb138.log4jtoxml.impl.fileWriters.PropertieWriter;
+import cz.muni.fi.pb138.log4jtoxml.fileReaders.XMLReader;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertieWriter;
 import java.io.File;
 import java.util.Properties;
 
