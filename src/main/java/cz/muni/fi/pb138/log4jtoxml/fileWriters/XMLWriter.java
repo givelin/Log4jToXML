@@ -7,6 +7,12 @@ package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 
 import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreateAppendersElement;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreateCustomLevels;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreateFiltersElement;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreateLoggersElement;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreatePropertiesElement;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.xml.CreateThresholdFilterElement;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
@@ -71,188 +77,15 @@ public class XMLWriter {
     
     private static Set<Element> setConfigurationChild(Properties properties) {
         Set<Element> childs = new HashSet<>();
-        childs.add(createCustomLevels(properties));
-        childs.add(createPropertiesElement(properties));
-        childs.add(createFiltersElement(properties));
-        childs.add(createThresholdFilterElement(properties));
-        childs.add(createAppendersElement(properties));
-        childs.add(createLoggersElement(properties));
+        childs.add(CreateCustomLevels.createCustomLevels(document, properties));
+        childs.add(CreatePropertiesElement.createPropertiesElement(document, properties));
+        childs.add(CreateFiltersElement.createFiltersElement(document, properties));
+        childs.add(CreateThresholdFilterElement.createThresholdFilterElement(document, properties));
+        childs.add(CreateAppendersElement.createAppendersElement(document, properties));
+        childs.add(CreateLoggersElement.createLoggersElement(document, properties));
         return childs;
     }
-    
-    private static Element createCustomLevels(Properties properties) {
-    //TODO
-        Element customLevels = document.createElement(XMLConst.CUSTOM_LEVELS);
-        Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
-            //find customLevel
-            Element customLevel = document.createElement(XMLConst.CUSTOM_LEVEL);
-            customLevel.setAttribute("name", name);//add
-            customLevel.setAttribute("intLevel", name);//add
-            customLevels.appendChild(customLevel);
-        }
-        if(customLevels.hasChildNodes()) {
-            return customLevels;
-        }
-        return null;
-    }
-    
-    private static Element createPropertiesElement(Properties properties) {
-        Element propertiesElement = document.createElement(XMLConst.PROPERTIES);
-        Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
-            if (name.startsWith(PropertiesConst.PROPERTY)) {
-                String propName = name.substring(PropertiesConst.PROPERTY.length());
-                Element propElement = document.createElement(XMLConst.PROPERTY);
-                propElement.setAttribute("name", propName);
-                propElement.appendChild(document.createTextNode(properties.getProperty(name)));
-                propertiesElement.appendChild(propElement);
-            }
-        }
-        if(propertiesElement.hasChildNodes()) {
-            return propertiesElement;
-        }
-        return null;
-    }
-    
-    private static Element createFiltersElement(Properties properties) {
-    //TODO
-        Element filtersElement = document.createElement(XMLConst.FILTERS);
-        Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
-            //find filters
-            Element filter = document.createElement(XMLConst.FILTER);
-            //add atributes
-            filtersElement.appendChild(filter);
-        }
-        if(filtersElement.hasChildNodes()) {
-            return filtersElement;
-        }
-        return null;
-    }
-    private static Element createThresholdFilterElement(Properties properties) {
-    //TODO
-        return null;
-    }
-    private static Element createAppendersElement(Properties properties) {
-    //TODO
-        Element appendersElement = document.createElement(XMLConst.APPENDERS);
-        Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
-            if(!name.startsWith(PropertiesConst.APPENDER)) {
-                propNames.remove(name);
-            }
-        }
-        while(!propNames.isEmpty()) {
-            appendersElement.appendChild(createAppender(properties, getAppendersOfOneType(propNames)));
-        }
-        if(appendersElement.hasChildNodes()) {
-            return appendersElement;
-        }
-        return null;
-    }
-    private static Element createAppender(Properties properties, Set<String> propNames) {
-        String firstName = propNames.iterator().next();
-        String[] splitName = firstName.split(".");
-        String prefix = splitName[0]+"."+splitName[1];
-        
-        Element appendeer = document.createElement(properties.getProperty(prefix+".type"));
-        appendeer.setAttribute("name", properties.getProperty(prefix+".name"));
-        if(propNames.contains(prefix+".fileName")) {
-            appendeer.setAttribute("fileName", properties.getProperty(prefix+".fileName"));
-        }
-        appendeer.appendChild(appenderLayout());
-        appendeer.appendChild(appenderFilters());
-        //maybe more...
-        return appendeer;
-    }
-    private static Element appenderLayout() {
-    //TODO
-        return null;
-    }
-    private static Element appenderFilters() {
-    //TODO
-        return null;
-    }
-    private static Set<String> getAppendersOfOneType(Set<String> names) {
-        if(names.isEmpty()) return Collections.EMPTY_SET;
-        String firstName = names.iterator().next();
-        String[] splitName = firstName.split(".");
-        Set<String> out = new HashSet<>();
-        for(String n : names) {
-            if(n.startsWith(splitName[0]+"."+splitName[1])) {
-                out.add(n);
-                names.remove(n);
-            }
-        }
-        return out;
-    }
 
-    private static Element createLoggersElement(Properties properties) {
-    //TODO
-        Element loggersElement = document.createElement(XMLConst.LOGGERS);
-        Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
-            if(!name.startsWith(PropertiesConst.LOGGER)) {
-                propNames.remove(name);
-            }
-        }
-        
-        //same as appender
-        while(!propNames.isEmpty()) {
-            loggersElement.appendChild(createLoggerElement(propNames, properties));
-        }
-
-        loggersElement.appendChild(createRootLoggerElement(properties));
-        if(loggersElement.hasChildNodes()) {
-            return loggersElement;
-        }
-        return null;
-    }
-    private static Element createLoggerElement(Set<String> propNames, Properties properties) {
-    //TODO
-        Element loggerEl = document.createElement(XMLConst.LOGGER);
-        String firstName = propNames.iterator().next();
-        String[] splitName = firstName.split(".");
-        String prefix = splitName[0]+"."+splitName[1];
-        //set atributes
-        loggerEl.setAttribute("name", properties.getProperty(prefix+".name"));
-        propNames.remove(prefix+".name");
-        if(propNames.contains(prefix+".level")) {
-            loggerEl.setAttribute("level", properties.getProperty(prefix+".level"));
-            propNames.remove(prefix+".level");
-        }
-        if(propNames.contains(prefix+".additivity")) {
-            loggerEl.setAttribute("additivity", properties.getProperty(prefix+".additivity"));
-            propNames.remove(prefix+".additivity");
-        }
-        //create child filters and create child appender ref        
-/*        <xs:complexType name="LoggerType">
-        <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="1">
-                <xs:element name="Filters" type="FiltersType"/>
-                <xs:element name="Filter" type="FilterType"/>
-            </xs:choice>
-            <xs:element name="AppenderRef" type="AppenderRefType"/>
-        </xs:sequence>
-*/
-        
-        return loggerEl;
-    }
-    private static Element createRootLoggerElement(Properties properties) {
-    //TODO
-        Element rootLogger = document.createElement(XMLConst.ROOT);
-        rootLogger.setAttribute("level", properties.getProperty(PropertiesConst.ROOT_LOGGER+".level"));
-        //add AppendeerRef
-        
-    /*<xs:complexType name="RootType">
-        <xs:sequence>
-            <xs:element name="AppenderRef" type="AppenderRefType" minOccurs="1" maxOccurs="unbounded"/>
-        </xs:sequence>
-</xs:complexType>*/
-        return rootLogger;
-    }
-    
     private static void setConfigurationAttributes(Properties properties, Element configuration) {
         for(String attributeName : XMLConst.configAttributes){
             if(properties.contains(attributeName)) {
