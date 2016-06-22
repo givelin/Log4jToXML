@@ -3,10 +3,8 @@
     <xs:element name="configuration" type="ConfigurationType"/>
     <xs:complexType name="ConfigurationType">
         <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="1">
-                <xs:element name="CustomLevels" type="CustomLevelsType"/>
-            </xs:choice>
-            <xs:element name="Properties" type="PropertiesType"/>
+            <xs:element name="CustomLevels" type="CustomLevelsType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Properties" type="PropertiesType" minOccurs="0" maxOccurs="1"/>
             <xs:choice minOccurs="0" maxOccurs="1">
                 <xs:sequence>
                     <xs:element name="Filters" type="FiltersType" minOccurs="0" maxOccurs="1"/>
