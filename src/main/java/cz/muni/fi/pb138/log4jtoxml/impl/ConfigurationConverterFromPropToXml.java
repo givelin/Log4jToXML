@@ -1,21 +1,18 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
-import cz.muni.fi.pb138.log4jtoxml.Validator;
+import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.PropertieReader;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.XMLWriter;
 import java.io.File;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.transform.TransformerConfigurationException;
 
 /**
  * Implementation of ConfigurationConverter from Prop to XML
  */
 public class ConfigurationConverterFromPropToXml implements ConfigurationConverter {
 
-    protected Validator validator;
+    protected XMLValidator validator;
 
     @Override
     public void convert(File input) {
@@ -41,7 +38,7 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
         XMLWriter.writeData(output, properties);
         
         if(validator==null) {
-            validator = new ValidatorImpl();
+            validator = new XMLValidatorImpl();
         }
         if(validator.isXMLFileValid(output)) {
             // somethink like System.out.println("Have a nice day, Mr. Bond");

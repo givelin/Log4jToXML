@@ -28,6 +28,7 @@ public class XMLConst {
     public static final String FILTERS = "Filters";
     public static final String THRESHOL_FILTER = "ThresholdFilter";
     public static final String APPENDERS = "Appenders";
+    public static final String APPENDER = "Appender";
     public static final String LOGGERS = "Loggers";
 
     public static final String PROPERTY = "Property";

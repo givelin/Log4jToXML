@@ -1,6 +1,6 @@
 package cz.muni.fi.pb138.log4jtoxml;
 
-import cz.muni.fi.pb138.log4jtoxml.impl.ValidatorImpl;
+import cz.muni.fi.pb138.log4jtoxml.impl.XMLValidatorImpl;
 import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,12 +8,12 @@ import org.junit.Assert;
 
 //TODO add xml files
 public class ValidatorTest {
-    protected Validator validator;
+    protected XMLValidator validator;
     protected ClassLoader classLoader;
     
     @Before
     public void setUp() {
-        validator = new ValidatorImpl();
+        validator = new XMLValidatorImpl();
         classLoader = getClass().getClassLoader();
     }
     

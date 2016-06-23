@@ -10,7 +10,7 @@ import java.io.File;
 /**
  *
  */
-public interface Validator {
+public interface XMLValidator {
      /**
      * Check if file is valid.
      * 

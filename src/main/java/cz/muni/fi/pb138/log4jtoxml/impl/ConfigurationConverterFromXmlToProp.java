@@ -1,7 +1,7 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
-import cz.muni.fi.pb138.log4jtoxml.Validator;
+import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.XMLReader;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertieWriter;
 import java.io.File;
@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 public class ConfigurationConverterFromXmlToProp implements ConfigurationConverter {
 
-    protected Validator validator;
+    protected XMLValidator validator;
 
     @Override
     public void convert(File input) {
@@ -33,7 +33,7 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
     public void convert(File input, File output) {
         //TODO
         if(validator==null) {
-            validator = new ValidatorImpl();
+            validator = new XMLValidatorImpl();
         }
         if(validator.isXMLFileValid(input)) {
         //ok skip
