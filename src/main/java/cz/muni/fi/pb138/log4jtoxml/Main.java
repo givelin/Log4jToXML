@@ -29,7 +29,7 @@ public class Main {
             
             extension = getExtension(path);
             
-            if (!(extension.toLowerCase().equals("xml") || extension.toLowerCase().equals("xml"))) {
+            if (!(extension.toLowerCase().equals("properties") || extension.toLowerCase().equals("xml"))) {
                 System.out.println();
                 System.out.println("Invalid path.");
                 continue;
@@ -91,8 +91,10 @@ public class Main {
             extension = getExtension(path);
             String inExtension = getExtension(inPath);
             
-            if (!((extension.toLowerCase().equals("xml") || extension.toLowerCase().equals("xml")) 
-                    && !extension.equals(inExtension) )) {
+            Boolean extensionValid = extension.toLowerCase().equals("properties") || extension.toLowerCase().equals("xml");
+            extensionValid &= !extension.equals(inExtension);
+            
+            if (!extensionValid) {
                 System.out.println();
                 System.out.println("Invalid path.");
                 continue;
@@ -129,7 +131,7 @@ public class Main {
 
         int i = path.lastIndexOf('.');
         if (i > 0) {
-            extension = path.substring(0, i-1);
+            extension = path.substring(0, i);
         }
 
         return extension;
@@ -148,9 +150,19 @@ public class Main {
         
         if (getExtension(inFile.getAbsolutePath()).equals("xml")){
             //convert XML -> properties
+            System.out.println("converting XML to properties");
+            System.out.println("file to be converted: ");
+            System.out.println(inFile.getAbsolutePath());
+            System.out.println("file to be created: ");
+            System.out.println(outFile.getAbsolutePath());
         }
         else {
             //convert properties -> XML
+            System.out.println("converting properties to XML");
+            System.out.println("file to be converted: ");
+            System.out.println(inFile.getAbsolutePath());
+            System.out.println("file to be created: ");
+            System.out.println(outFile.getAbsolutePath());
         }
         
     }
