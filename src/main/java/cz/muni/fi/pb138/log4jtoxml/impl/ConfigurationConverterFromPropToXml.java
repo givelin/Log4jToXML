@@ -38,11 +38,7 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
         //reading file, get all data
         Properties properties = PropertieReader.readPropertieFile(input);
 
-        try {
-            XMLWriter.writeData(output, properties);
-        } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        XMLWriter.writeData(output, properties);
         
         if(validator==null) {
             validator = new ValidatorImpl();

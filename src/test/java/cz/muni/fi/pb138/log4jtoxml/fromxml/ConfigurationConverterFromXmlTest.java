@@ -52,7 +52,7 @@ public class ConfigurationConverterFromXmlTest  extends ConfigurationConverterBa
     public void convertunvalidFileTest() {
         // create unvalid file
         File input = new File(classLoader.getResource("fromXml/input/unvalid_in01.xml").getPath());
-        convert.convert(input);
+        converter.convert(input);
         //throw exception
         fail("Unvalid file was converted");
     }

@@ -36,7 +36,6 @@ public class ConfigurationConverterFromPropTest extends ConfigurationConverterBa
             //readLine failed
             fail("readLine throw exception");
         }
-        throw new 
     }
     
     //after test delete files in outpu??
@@ -54,7 +53,7 @@ public class ConfigurationConverterFromPropTest extends ConfigurationConverterBa
     public void convertunvalidFileTest() {
         // create unvalid file
         File input = new File(classLoader.getResource("fromProp/input/unvalid_in01.properties").getPath());
-        convert.convert(input);
+        converter.convert(input);
         //throw exception
         fail("Unvalid file was converted");
     }
