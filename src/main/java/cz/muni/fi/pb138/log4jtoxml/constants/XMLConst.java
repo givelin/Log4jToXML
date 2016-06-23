@@ -6,8 +6,9 @@
 package cz.muni.fi.pb138.log4jtoxml.constants;
 
 /**
- *
- * @author Jakub
+ * Class for hodling some constants used in XML files.
+ * 
+ * @author Team
  */
 public class XMLConst {
     public static final String CONFIGURATION = "Configuration";

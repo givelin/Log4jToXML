@@ -5,6 +5,11 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.constants;
 
+/**
+ * Class for holding some constatns used in properties files.
+ * 
+ * @author Team
+ */
 public class PropertiesConst {
     
     public static final String PREFIX = "log4j";
