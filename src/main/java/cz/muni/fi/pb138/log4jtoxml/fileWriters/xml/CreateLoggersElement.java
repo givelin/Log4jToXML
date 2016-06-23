@@ -14,10 +14,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child loggers xml element.
  * @author Jakub
  */
 public class CreateLoggersElement {
+    /**
+     * Static method for creating of logger xml child
+     * @param document xml
+     * @param properties data
+     * @return Element loggers
+     */
     public static Element createLoggersElement(Document document, Properties properties) {
         Element loggersElement = document.createElement(XMLConst.LOGGERS);
         Set<String> propNames = properties.stringPropertyNames();

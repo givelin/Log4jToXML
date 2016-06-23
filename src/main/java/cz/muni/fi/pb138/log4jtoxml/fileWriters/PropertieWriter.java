@@ -16,7 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Class for writing properties in file
+ * 
  * @author Jakub
  */
 public class PropertieWriter {
@@ -37,6 +38,13 @@ public class PropertieWriter {
         }
     }
     
+    /**
+     * This static method takes data as object of java.util.Properties and
+     * save all data in file
+     * 
+     * @param output File were ara data saved
+     * @param properties Object of java.util.Properties. This object contains all data.
+     */
     public static void writeData(File output, Properties properties) {
         try {
             properties.store(new FileOutputStream(output), null);

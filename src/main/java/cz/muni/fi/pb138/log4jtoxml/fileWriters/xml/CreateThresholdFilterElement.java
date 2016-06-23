@@ -12,11 +12,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child threshold filter xml element.
  * @author Jakub
  */
 public class CreateThresholdFilterElement {
-        public static Element createThresholdFilterElement(Document document,Properties properties) {
+    /**
+     * Static method for creating of threshold filter xml child
+     * @param document xml
+     * @param properties data
+     * @return Element threshodl filter
+     */
+    public static Element createThresholdFilterElement(Document document,Properties properties) {
             String prefix = PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD;
             for(String name : properties.stringPropertyNames()) {
                 if(name.startsWith(PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD)) {

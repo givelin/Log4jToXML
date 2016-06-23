@@ -30,13 +30,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class dor writitn in properties data into xml 
  * @author Jakub
  */
 public class XMLWriter {
     //class for writing data into file
     private static Document document;
     
+    /**
+     * Class for creatin XML documet into file
+     * @param output File where are data saved.
+     * @param properties data input for xml document.
+     */
     public static void writeData(File output, Properties properties) {
         Set<String> propNames = properties.stringPropertyNames();
 

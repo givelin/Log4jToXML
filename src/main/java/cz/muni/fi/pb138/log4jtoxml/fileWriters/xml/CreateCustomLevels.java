@@ -12,10 +12,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child custom levels xml element.
  * @author Jakub
  */
 public class CreateCustomLevels {
+    /**
+     * Static method for creating of custom levels xml child
+     * @param document xml
+     * @param properties data
+     * @return Element custom levels
+     */
     public static Element createCustomLevels(Document document, Properties properties) {
         Element customLevels = document.createElement(XMLConst.CUSTOM_LEVELS);
         Set<String> propNames = properties.stringPropertyNames();

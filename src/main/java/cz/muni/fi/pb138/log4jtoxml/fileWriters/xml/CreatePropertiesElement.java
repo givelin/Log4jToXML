@@ -13,10 +13,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child properties xml element.
  * @author Jakub
  */
 public class CreatePropertiesElement {
+    /**
+     * Static method for creating of properties xml child
+     * @param document xml
+     * @param properties data
+     * @return Elemen properties
+     */
     public static Element createPropertiesElement(Document document, Properties properties) {
         Element propertiesElement = document.createElement(XMLConst.PROPERTIES);
         Set<String> propNames = properties.stringPropertyNames();

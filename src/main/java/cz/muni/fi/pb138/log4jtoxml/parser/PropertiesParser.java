@@ -30,7 +30,11 @@ import java.util.Set;
 public class PropertiesParser {
 
     private static Set<Log4jObject> data;
-    
+    /**
+     * @deprecated not using
+     * @param inputData
+     * @return 
+     */
     public static Set<Log4jObject> sortAndSave(Map<String,String> inputData) {
         //TODO
         data = new HashSet<>();

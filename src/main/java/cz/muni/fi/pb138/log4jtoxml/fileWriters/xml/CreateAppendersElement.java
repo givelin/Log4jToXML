@@ -15,10 +15,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child appender xml element.
  * @author Jakub
  */
 public class CreateAppendersElement {
+    /**
+     * Static method for creating of appeneder xml child
+     * 
+     * @param document xml document
+     * @param properties data
+     * @return Element - appender
+     */
     public static Element createAppendersElement(Document document, Properties properties) {
         Element appendersElement = document.createElement(XMLConst.APPENDERS);
         Set<String> propNames = properties.stringPropertyNames();

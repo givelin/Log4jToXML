@@ -13,11 +13,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Class for child filters xml element.
  * @author Jakub
  */
 public class CreateFiltersElement {
-        
+    /**
+     * Static method for filters of appeneder xml child
+     * @param document xml
+     * @param properties data
+     * @return Element filters
+     */    
     public static Element createFiltersElement(Document document, Properties properties) {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> propNames = properties.stringPropertyNames();
