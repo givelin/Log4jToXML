@@ -693,6 +693,59 @@
         </xs:attribute>
         <xs:attribute name="reconnectionDelayMillis" type="xs:integer" use="optional"/>
     </xs:complexType>
+    <!--ZeroMQ/JeroMQ appender-->
+    <xs:complexType name="JeroMQAppenderType">
+    	<xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:sequence>
+                    <xs:element name="Filters" type="FiltersType" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="BurstFilter" type="BurstFilterType"/>
+                    <xs:element name="DynamicThresholdFilter" type="DynamicThresholdFilterType"/>
+                    <xs:element name="MapFilter" type="MapFilterType"/>
+                    <xs:element name="MarkerFilter" type="MarkerFilterType"/>
+                    <xs:element name="RegexFilter" type="RegexFilterType"/>
+                    <xs:element name="ScriptFilter" type="ScriptFilterType"/>
+                    <xs:element name="StructuredDataFilter" type="StructuredDataFilterType"/>
+                    <xs:element name="ThreadContextMapFilter" type="ThreadContextMapFilterType"/>
+                    <xs:element name="ThresholdFilter" type="ThresholdFilterType"/>
+                    <xs:element name="TimeFilter" type="TimeFilterType"/>
+                </xs:choice>
+            </xs:choice>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:element name="GelfLayout" type="GelfLayoutType"/>
+                <xs:element name="HTMLLayout" type="HTMLLayoutType"/>
+                <xs:element name="JSONLayout" type="JSONLayoutType"/>
+                <xs:element name="PatternLayout" type="PatternLayoutType"/>
+                <xs:element name="RFC5424Layout" type="RFC5424LayoutType"/>
+                <xs:element name="SyslogLayout" type="SyslogLayoutType"/>
+                <xs:element name="XMLLayout" type="XMLLayoutType"/>
+            </xs:choice>
+            <xs:element name="Properties" type="PropertiesType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="ignoreExceptions" type="xs:boolean" use="optional"/>
+        <xs:attribute name="affinity" type="xs:long" use="optional"/>
+        <xs:attribute name="backlog" type="xs:long" use="optional"/>
+        <xs:attribute name="delayAttachOnConnect" type="boolean" use="optional"/>
+        <xs:attribute name="ipv4Only" type="xs:boolean" use="optional"/>
+        <xs:attribute name="linger" type="xs:long" use="optional"/>
+        <xs:attribute name="maxMsgSize" type="xs:long" use="optional"/>
+        <xs:attribute name="rcvHwm" type="xs:long" use="optional"/>
+        <xs:attribute name="receiveBufferSize" type="xs:long" use="optional"/>
+        <xs:attribute name="receiveTimeOut" type="xs:integer" use="optional"/>
+        <xs:attribute name="reconnectIVL" type="xs:long" use="optional"/>
+        <xs:attribute name="reconnectILVMax" type="xs:long" use="optional"/>
+        <xs:attribute name="sendBufferSize" type="xs:long" use="optional"/>
+        <xs:attribute name="sendTimeOut" type="xs:integer" use="optional"/>
+        <xs:attribute name="sndHwm" type="xs:long" use="optional"/>
+        <xs:attribute name="tcpKeepAlive" type="xs:integer" use="optional"/>
+        <xs:attribute name="tcpKeepAliveCount" type="xs:long" use="optional"/>
+        <xs:attribute name="tcpKeepAliveIdle" type="xs:long" use="optional"/>
+        <xs:attribute name="tcpKeepAliveInterval" type="xs:long" use="optional"/>
+        <xs:attribute name="xpubVerbose" type="xs:boolean" use="optional"/>
+    </xs:complexType>
     <!--Filter types section-->
     <!--Composite filters group-->
     <xs:complexType name="FiltersType">
