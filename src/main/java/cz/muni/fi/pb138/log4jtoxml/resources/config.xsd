@@ -40,22 +40,22 @@
     <!--Appenders type, global-->
     <xs:complexType name="AppendersType">
         <xs:sequence>
-            <xs:element name="Async" type="AsyncAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Console" type="ConsoleAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Failover" type="FailoverAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="File" type="FileAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Flume" type="FlumeAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="JDBC" type="JDBCAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="JMS" type="JMSAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="JPA" type="JPAAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Kafka" type="KafkaAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="MemoryMappedFile" type="MemoryMappedFileAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="NoSQL" type="NoSQLAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Rewrite" type="RewriteAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="RolingFile" type="RolingFileAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="Socket" type="SocketAppenderType" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="STMP" type="STMPAppenderType" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Async" type="AsyncAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Console" type="ConsoleAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Failover" type="FailoverAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="File" type="FileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Flume" type="FlumeAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="JDBC" type="JDBCAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="JMS" type="JMSAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="JPA" type="JPAAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Kafka" type="KafkaAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="MemoryMappedFile" type="MemoryMappedFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="NoSQL" type="NoSQLAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Rewrite" type="RewriteAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="RolingFile" type="RolingFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Socket" type="SocketAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="STMP" type="STMPAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Syslog" type="SyslogAppenderType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
