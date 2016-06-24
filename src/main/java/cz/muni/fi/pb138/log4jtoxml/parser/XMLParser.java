@@ -5,11 +5,9 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.parser;
 
-import cz.muni.fi.pb138.log4jtoxml.prop.Log4jObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Set;
 import javax.xml.bind.ValidationException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,21 +24,19 @@ import org.xml.sax.SAXException;
  * @author Petr
  */
 public class XMLParser {
-    private Set<Log4jObject> data;
     private Document doc;
     private Properties prop = new Properties();
     private enum XMLSkip {Configuration, Appenders};
     
-    private void loadXML(File xmlFile) throws SAXException, ParserConfigurationException, IOException {
+    private static Document loadXML(File xmlFile) throws SAXException, ParserConfigurationException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        doc = builder.parse(xmlFile);
-        
+        return builder.parse(xmlFile);
     }
     
-    public Set<Log4jObject> loadAndSave(File xmlFile){
+    public Properties loadAndSave(File xmlFile){
         try{
-            loadXML(xmlFile);
+            this.doc = loadXML(xmlFile);
         }
         catch(SAXException | ParserConfigurationException | IOException e)
         {
@@ -57,7 +53,7 @@ public class XMLParser {
         }
         
 
-            return data;
+            return prop;
         }
     
     //predpokladam, ze properties v sobe maji jen <property name="...">value</..>
