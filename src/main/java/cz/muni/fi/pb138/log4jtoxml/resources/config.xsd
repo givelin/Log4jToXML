@@ -57,6 +57,7 @@
             <xs:element name="Socket" type="SocketAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="STMP" type="STMPAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Syslog" type="SyslogAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="JeroMQ" type="JeroMQAppenderType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
     <!--AsyncAppender type-->
