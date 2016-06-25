@@ -27,18 +27,23 @@ public class CreateFiltersElement {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
+            /*
             if(name.startsWith(PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD)) {
                 continue;
             }
-            String[] split = name.split(".");
+            */
+            if(!name.startsWith(PropertiesConst.FILTER)) {
+                continue;
+            }
+            
+            String[] split = name.split("\\.");
             String filterType = split[1];
             String filterPrefix = PropertiesConst.FILTER + "." + filterType;
-
+            
             //find filters
-            Element filter = document.createElement(properties.getProperty(XMLConst.FILTER));
-            propNames.remove(filterPrefix + ".type");
+            Element filter = document.createElement(XMLConst.FILTER);
 
-            filter.setAttribute("type", properties.getProperty(filterPrefix + ".type"));
+            filter.setAttribute("type", filterType);
             propNames.remove(filterPrefix + ".type");
             if (propNames.contains(filterPrefix + ".level")) {
                 filter.setAttribute("level", properties.getProperty(filterPrefix + ".level"));
@@ -72,7 +77,6 @@ public class CreateFiltersElement {
                 propNames.remove(filterPrefix + ".pair.value");
                 filter.appendChild(keyPair);
             }
-
             filtersElement.appendChild(filter);
         }
         if(filtersElement.hasChildNodes()) {
