@@ -91,7 +91,7 @@ public class XMLWriter {
 
     private static void setConfigurationAttributes(Properties properties, Element configuration) {
         for (String attributeName : XMLConst.configAttributes) {
-            if (properties.contains(attributeName)) {
+            if (properties.containsKey(attributeName)) {
                 if (properties.getProperty(attributeName) == null) {
                     continue;
                 }

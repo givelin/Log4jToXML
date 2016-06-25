@@ -28,13 +28,13 @@ public class CreateThresholdFilterElement {
                 if(name.startsWith(Log4j2Constants.FILTER+"."+Log4j2Constants.THRESHOLD)) {
                     Element thFilter = document.createElement(XMLConst.THRESHOL_FILTER);
                     if(properties.containsKey(prefix+".level")) {
-                        thFilter.setAttribute("level", prefix+".level");
+                        thFilter.setAttribute("level", properties.getProperty(prefix+".level"));
                     }
                     if(properties.containsKey(prefix+".onMatch")) {
-                        thFilter.setAttribute("onMatch", prefix+".onMatch");
+                        thFilter.setAttribute("onMatch", properties.getProperty(prefix+".onMatch"));
                     }
                     if(properties.containsKey(prefix+".onMismatch")) {
-                        thFilter.setAttribute("onMismatch", prefix+".onMismatch");
+                        thFilter.setAttribute("onMismatch", properties.getProperty(prefix+".onMismatch"));
                     }
                     return thFilter;
                 }

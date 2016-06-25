@@ -35,13 +35,6 @@ public class CreateAppendersElement {
             if(!name.startsWith("appender"))
                 iterator.remove();
         }
-        /*
-        for(String name : propNames) {
-            if(!name.startsWith(Log4j2Constants.APPENDER)) {
-                propNames.remove(name);
-            }
-        }
-        */
         
         while(!propNames.isEmpty()) {
             appendersElement.appendChild(createAppender(document, properties, getAppendersOfOneType(propNames)));
@@ -179,6 +172,7 @@ public class CreateAppendersElement {
         }
         return out;
     }
+    
     private static Set<String> getAppenderFilterPropNames(Properties properties, String prefix) {
         Set<String> names = new HashSet<>();
         for (String s : properties.stringPropertyNames()) {
