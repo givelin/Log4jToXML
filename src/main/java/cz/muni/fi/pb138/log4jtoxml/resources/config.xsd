@@ -27,7 +27,7 @@
         </xs:sequence>
         <xs:attribute name="advertiser" type="xs:string"/>
         <xs:attribute name="dest" type="xs:string"/>
-        <xs:attribute name="motionInterval" type="xs:integer"/>
+        <xs:attribute name="monitorInterval" type="xs:integer"/>
         <xs:attribute name="name" type="xs:string"/>
         <xs:attribute name="packages" type="xs:string"/>
         <xs:attribute name="schema" type="xs:string"/>
