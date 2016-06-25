@@ -5,11 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.APPENDER;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.APPENDE_REF;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.FILTER;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.LOGGER;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.ROOT;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -63,7 +59,7 @@ public class PropertiesWriter2 {
                 }
             }
             if (!isNullOrEmpty(appenders)) {
-                writeAppender(appenders, writer, "");
+                writeAppender(appenders, writer, "appender.");
             }
             if (!isNullOrEmpty(loggers)) {
                 writeLogger(loggers, writer, "", "");
@@ -80,6 +76,124 @@ public class PropertiesWriter2 {
     }
     
     
+    
+    private void writeDeep (Log4j2Object start, Writer writer, String path) throws IOException {
+        if (!start.getAttributes().isEmpty()) {
+            for (Entry e : start.getAttributes().entrySet()) {
+                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
+            } 
+        }
+        if (!start.getChildren().isEmpty()) { 
+            for (Log4j2Object obj: start.getChildren()) {
+                String str = "";
+                if (obj.getName() != null) {
+                    str = obj.getName() + ".";
+                }
+                writeDeep(obj, writer, path + str);
+            }
+        }
+    }
+    
+    private void writeAppender (Log4j2Object start, Writer writer, String path) throws IOException {
+        if (!start.getAttributes().isEmpty()) {
+            for (Entry e : start.getAttributes().entrySet()) {
+                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
+            } 
+        }
+        if (!start.getChildren().isEmpty()) { 
+            for (Log4j2Object obj: start.getChildren()) {
+                String str = "";
+                if (obj.getName() != null) {
+                    if (path.equals("appender.")) {
+                        obj.addAttribute("type", obj.getName());
+                    }
+                    str += nameHelper(obj.getName());
+                    if (!obj.getName().equals(str) && !str.equals("")) {
+                        obj.addAttribute("type", obj.getName().substring(0,str.indexOf(str)));
+                    }
+                    str += ".";
+                }
+                writeAppender(obj, writer, path + str);
+            }
+        }
+    }
+    
+    private void writeLogger (Log4j2Object start, Writer writer, String path, String appender) throws IOException {
+        if (!start.getAttributes().isEmpty()) {
+            for (Entry e : start.getAttributes().entrySet()) {
+                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
+            } 
+        }
+        if (!start.getChildren().isEmpty()) { 
+            for (Log4j2Object obj: start.getChildren()) {
+                String str = "";
+                String appRef = appender;
+                if (obj.getName() != null) {
+                    // FILTER !!!
+                    str = obj.getName() + ".";
+                    if (obj.getName().equals(Log4j2Constants.LOGGER)) {
+                        str = obj.getName() + "." + getLoggerSuffix(obj) + ".";
+                        appRef = getLoggerSuffix(obj);
+                    }
+                    if (obj.getName().equals(Log4j2Constants.APPENDE_REF)) {
+                        str = obj.getName() + "." + appRef + ".";
+                    }
+                    if (obj.getName().equals(Log4j2Constants.ROOT)){
+                        str = "rootLogger.";
+                        appRef = getLoggerSuffix(obj);
+                    }
+                }
+                writeLogger(obj, writer, path + str, appRef);
+            }
+        }
+    }
+    
+    private String nameHelper (String str) {
+        if (!str.equals(Log4j2Constants.FILTERS) && !str.equals(Log4j2Constants.FAILOVERS)
+                && !str.equals(Log4j2Constants.PROPERTIES)) {
+            if (str.toLowerCase().contains(Log4j2Constants.FILTER)) {               
+                return Log4j2Constants.FILTER;
+            } else if (str.toLowerCase().contains(Log4j2Constants.LAYOUT)) {
+                return Log4j2Constants.LAYOUT;
+            }
+            return str;
+        }
+        return "";
+    }
+    
+    private String getLoggerSuffix (Log4j2Object logger) {
+        String appenderRef = null;
+        for (Log4j2Object obj : logger.getChildren()) {
+            if (obj.getName().equals(Log4j2Constants.APPENDE_REF)) {
+                appenderRef = obj.getAttributes().get("ref");
+            }
+        }
+        for (Log4j2Object obj : appenders.getChildren()) {
+            if (obj.getAttributes().get("name").equals(appenderRef)) {
+                return appenderRef;
+            }
+        }
+        return "EMPTY";
+    }
+    
+    private String trimString (String str) {
+        if (str != null) {
+            String[] out = str.split("(?<=\\p{Ll})(?=\\p{Lu})");
+            return out[0];
+        }
+        return null;
+    }
+    
+    private boolean isNullOrEmpty (Log4j2Object obj) {
+        if (obj == null) {
+            return true;
+        } else if (obj.getChildren().isEmpty() && obj.getAttributes().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+    
+    /*
     
     private void writeConfig (Writer writer) throws IOException {
         for (Entry e : config.getAttributes().entrySet()) {
@@ -144,100 +258,5 @@ public class PropertiesWriter2 {
         }
     }
     
-    private void writeDeep (Log4j2Object start, Writer writer, String path) throws IOException {
-        if (!start.getAttributes().isEmpty()) {
-            for (Entry e : start.getAttributes().entrySet()) {
-                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
-            } 
-        }
-        if (!start.getChildren().isEmpty()) { 
-            for (Log4j2Object obj: start.getChildren()) {
-                String str = "";
-                if (obj.getName() != null) {
-                    str = obj.getName() + ".";
-                }
-                writeDeep(obj, writer, path + str);
-            }
-        }
-    }
-    
-    private void writeAppender (Log4j2Object start, Writer writer, String path) throws IOException {
-        if (!start.getAttributes().isEmpty()) {
-            for (Entry e : start.getAttributes().entrySet()) {
-                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
-            } 
-        }
-        if (!start.getChildren().isEmpty()) { 
-            for (Log4j2Object obj: start.getChildren()) {
-                String str = "";
-                if (obj.getName() != null) {
-                    str = obj.getName() + ".";
-                    if (obj.getName().equals(APPENDER) || obj.getName().equals(FILTER))
-                        str = obj.getName() + "." + trimString(obj.getType()) + ".";
-                }
-                writeAppender(obj, writer, path + str);
-            }
-        }
-    }
-    
-    private void writeLogger (Log4j2Object start, Writer writer, String path, String appender) throws IOException {
-        if (!start.getAttributes().isEmpty()) {
-            for (Entry e : start.getAttributes().entrySet()) {
-                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
-            } 
-        }
-        if (!start.getChildren().isEmpty()) { 
-            for (Log4j2Object obj: start.getChildren()) {
-                String str = "";
-                String appRef = appender;
-                if (obj.getName() != null) {
-                    str = obj.getName() + ".";
-                    if (obj.getName().equals(LOGGER)) {
-                        str = obj.getName() + "." + getLoggerSuffix(obj) + ".";
-                        appRef = getLoggerSuffix(obj);
-                    }
-                    if (obj.getName().equals(APPENDE_REF)) {
-                        str = obj.getName() + "." + appRef + ".";
-                    }
-                    if (obj.getName().equals(ROOT)){
-                        str = "rootLogger.";
-                        appRef = getLoggerSuffix(obj);
-                    }
-                }
-                writeLogger(obj, writer, path + str, appRef);
-            }
-        }
-    }
-    
-    private String getLoggerSuffix (Log4j2Object logger) {
-        String appenderRef = null;
-        for (Log4j2Object obj : logger.getChildren()) {
-            if (obj.getName().equals(APPENDE_REF)) {
-                appenderRef = obj.getAttributes().get("ref");
-            }
-        }
-        for (Log4j2Object obj : appenders.getChildren()) {
-            if (obj.getAttributes().get("name").equals(appenderRef)) {
-                return trimString(obj.getType());
-            }
-        }
-        return null;
-    }
-    
-    private String trimString (String str) {
-        if (str != null) {
-            String[] out = str.split("(?<=\\p{Ll})(?=\\p{Lu})");
-            return out[0];
-        }
-        return null;
-    }
-    
-    private boolean isNullOrEmpty (Log4j2Object obj) {
-        if (obj == null) {
-            return true;
-        } else if (obj.getChildren().isEmpty() && obj.getAttributes().isEmpty()) {
-            return true;
-        }
-        return false;
-    }
+    */
 }

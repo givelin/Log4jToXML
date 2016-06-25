@@ -31,7 +31,7 @@ public class XMLValidatorImpl implements XMLValidator {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(file));
         } catch (IOException e) {
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("I/O Exception: " + e.getMessage());
             return false;
         } catch (SAXException e1) {
             System.out.println("SAX Exception: " + e1.getMessage());

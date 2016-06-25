@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +32,7 @@ public class InputLoader {
     private BufferedReader in;
     private InputStream is;
     
+    /*
     public InputLoader(InputStream is) {
         if (is == null) {
             throw new IllegalArgumentException("No input stream");
@@ -37,6 +40,7 @@ public class InputLoader {
     	this.is = is;
         this.in = new BufferedReader(new InputStreamReader(is));
     }
+    */
     
     public InputLoader(String nameOfFile) throws FileNotFoundException {
         if (nameOfFile == null) {
@@ -48,6 +52,19 @@ public class InputLoader {
         this.nameOfFile = nameOfFile;
         this.is = new FileInputStream(new File(nameOfFile));
         this.in = new BufferedReader(new InputStreamReader(is)); 
+    }
+    
+    public InputLoader (File file) {
+        if (file == null) {
+            throw new IllegalArgumentException("No file");
+        }
+        try {
+            this.is = new FileInputStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(InputLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.in = new BufferedReader(new InputStreamReader(is));
+        this.nameOfFile = file.getName();
     }
     
     public Document getDOM() throws ParserConfigurationException, IOException, SAXException {

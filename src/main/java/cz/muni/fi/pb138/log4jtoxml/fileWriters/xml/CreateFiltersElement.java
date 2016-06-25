@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Properties;
 import java.util.Set;
@@ -32,13 +32,13 @@ public class CreateFiltersElement {
                 continue;
             }
             */
-            if(!name.startsWith(PropertiesConst.FILTER)) {
+            if(!name.startsWith(Log4j2Constants.FILTER)) {
                 continue;
             }
             
             String[] split = name.split("\\.");
             String filterType = split[1];
-            String filterPrefix = PropertiesConst.FILTER + "." + filterType;
+            String filterPrefix = Log4j2Constants.FILTER + "." + filterType;
             
             //find filters
             Element filter = document.createElement(XMLConst.FILTER);

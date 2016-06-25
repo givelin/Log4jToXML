@@ -5,12 +5,12 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.parser;
 
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.APPENDERS;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.CUSTOM_LEVELS;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.FILTER;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.FILTERS;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.LOGGERS;
-import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.PROPERTIES;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.APPENDERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.CUSTOM_LEVELS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTER;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.LOGGERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.PROPERTIES;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,14 +90,10 @@ public class XMLParser3 {
     
     private Log4j2Object parseNode (Node node) {
         Log4j2Object o = new Log4j2Object();
+        o.setName(node.getNodeName());
         if (node.hasAttributes()) {
-            o.setName(node.getNodeName());
-            //System.out.println(node.getNodeName());
             for (int i=0; i<node.getAttributes().getLength(); i++) {
                 Node att = node.getAttributes().item(i);
-                if (att.getNodeName().equals("type")) {
-                    o.setType(att.getNodeValue()); // + "." + att.getNodeValue()
-                }
                 o.addAttribute(att.getNodeName(), att.getNodeValue());
             }
         }

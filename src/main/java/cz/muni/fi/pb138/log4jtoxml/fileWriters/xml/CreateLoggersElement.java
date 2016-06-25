@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.HashSet;
 import java.util.Properties;
@@ -28,7 +28,7 @@ public class CreateLoggersElement {
         Element loggersElement = document.createElement(XMLConst.LOGGERS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
-            if(!name.startsWith(PropertiesConst.LOGGER)) {
+            if(!name.startsWith(Log4j2Constants.LOGGER)) {
                 propNames.remove(name);
             }
         }
@@ -72,9 +72,9 @@ public class CreateLoggersElement {
     }
     private static Element createRootLoggerElement(Document document, Properties properties) {
         Element rootLogger = document.createElement(XMLConst.ROOT);
-        rootLogger.setAttribute("level", properties.getProperty(PropertiesConst.ROOT_LOGGER+".level"));
+        rootLogger.setAttribute("level", properties.getProperty(Log4j2Constants.ROOT_LOGGER+".level"));
         //add AppendeerRef
-        rootLogger.appendChild(createAppenderRef(document, properties, PropertiesConst.ROOT_LOGGER));
+        rootLogger.appendChild(createAppenderRef(document, properties, Log4j2Constants.ROOT_LOGGER));
         return rootLogger;
     }
     

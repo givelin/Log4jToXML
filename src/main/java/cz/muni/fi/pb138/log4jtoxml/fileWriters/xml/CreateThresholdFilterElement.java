@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Properties;
 import org.w3c.dom.Document;
@@ -23,9 +23,9 @@ public class CreateThresholdFilterElement {
      * @return Element threshodl filter
      */
     public static Element createThresholdFilterElement(Document document,Properties properties) {
-            String prefix = PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD;
+            String prefix = Log4j2Constants.FILTER+"."+Log4j2Constants.THRESHOLD;
             for(String name : properties.stringPropertyNames()) {
-                if(name.startsWith(PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD)) {
+                if(name.startsWith(Log4j2Constants.FILTER+"."+Log4j2Constants.THRESHOLD)) {
                     Element thFilter = document.createElement(XMLConst.THRESHOL_FILTER);
                     if(properties.containsKey(prefix+".level")) {
                         thFilter.setAttribute("level", prefix+".level");

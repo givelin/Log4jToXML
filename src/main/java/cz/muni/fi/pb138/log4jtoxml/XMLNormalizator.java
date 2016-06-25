@@ -5,6 +5,8 @@
  */
 package cz.muni.fi.pb138.log4jtoxml;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.ValidationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +18,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Petr
  */
-public class NodeValueToAttribute {
+public class XMLNormalizator {
     private void process(Node n) throws ValidationException{
         if (n.getNodeType() == Node.TEXT_NODE) {
             String text = n.getTextContent();
@@ -97,5 +99,43 @@ public class NodeValueToAttribute {
         }
         
         return doc;
+    }
+    
+    public Document toConcise (Document doc) {
+        Set<Node> nodes = traverseNode(doc.getDocumentElement());
+        for (Node n : nodes) {
+            NamedNodeMap attributes = n.getAttributes();
+            String att = null;
+            for (int i = 0; i < attributes.getLength(); i++) {
+                if (attributes.item(i).getNodeName().equals("type"))
+                    att = attributes.item(i).getNodeValue();
+            }
+            doc.renameNode(n, n.getNamespaceURI(), att);
+            ((Element) n).removeAttribute("type");
+        }
+        return doc;
+    }
+    
+    private Set<Node> traverseNode (Node start) {
+        if (start == null)
+            return null;
+        //String NODENAME = start.getNodeName();
+        Set<Node> nodesToRename = new HashSet<>();
+        if (start.hasChildNodes()) {
+            NodeList children = start.getChildNodes();
+            for (int i = 0; i<children.getLength(); i++) {
+                nodesToRename.addAll(traverseNode(children.item(i)));
+            }
+        }
+        if (start.hasAttributes()) {
+           NamedNodeMap list = start.getAttributes();
+            for (int i = 0; i< list.getLength(); i++) {
+                if (list.item(i).getNodeName().equals("type")) {
+                    nodesToRename.add(start);
+                }
+            } 
+        }
+        
+        return nodesToRename;
     }
 }

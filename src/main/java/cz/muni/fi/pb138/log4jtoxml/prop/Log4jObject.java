@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.prop;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import java.util.Objects;
 
 /**
@@ -64,6 +64,6 @@ public class Log4jObject {
     }
     
     public String getPrefix() {
-        return PropertiesConst.PREFIX;
+        return Log4j2Constants.PREFIX;
     }
 }

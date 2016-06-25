@@ -5,7 +5,7 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.PropertiesConst;
+import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,7 +30,7 @@ public class CreateAppendersElement {
         Element appendersElement = document.createElement(XMLConst.APPENDERS);
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
-            if(!name.startsWith(PropertiesConst.APPENDER)) {
+            if(!name.startsWith(Log4j2Constants.APPENDER)) {
                 propNames.remove(name);
             }
         }

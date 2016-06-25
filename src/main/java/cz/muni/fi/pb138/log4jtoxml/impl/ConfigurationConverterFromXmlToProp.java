@@ -2,10 +2,13 @@ package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
 import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
-import cz.muni.fi.pb138.log4jtoxml.fileReaders.XMLReader;
+import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertieWriter;
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of ConfigurationConverter from XML to Prop
@@ -41,7 +44,12 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         //throw unvalid exception...
         }
 
-        Properties properties = XMLReader.readXMLFile(input);
+        Properties properties = null;
+        try {
+            properties = (new InputLoader(input)).getProperties();
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigurationConverterFromXmlToProp.class.getName()).log(Level.SEVERE, null, ex);
+        }
         PropertieWriter.writeData(output, properties);
 
         throw new UnsupportedOperationException("Not supported yet.");
