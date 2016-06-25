@@ -5,8 +5,11 @@
  */
 package cz.muni.fi.pb138.log4jtoxml;
 
+import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.XMLWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Scanner;
 
 /**
@@ -84,7 +87,7 @@ public class Main {
                     System.out.println("Unable to create file. Path might be invalid.");
                     continue;
                 }
-                
+                System.out.println(file.getAbsolutePath());
                 return file;
             }
             
@@ -159,10 +162,16 @@ public class Main {
         else {
             //convert properties -> XML
             System.out.println("converting properties to XML");
-            System.out.println("file to be converted: ");
-            System.out.println(inFile.getAbsolutePath());
-            System.out.println("file to be created: ");
-            System.out.println(outFile.getAbsolutePath());
+            XMLWriter writer = new XMLWriter();
+            InputLoader loader = new InputLoader(inFile);
+            try{
+                Properties prop = loader.getProperties();
+                writer.writeData(outFile, prop);
+            }
+            catch(IOException e)
+            {
+                System.out.printf("An error occured during conversion. We are sorry. Please don't cry.");
+            }
         }
         
     }
