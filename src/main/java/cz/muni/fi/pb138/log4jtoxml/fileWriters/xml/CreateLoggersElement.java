@@ -8,6 +8,7 @@ package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import org.w3c.dom.Document;
@@ -27,11 +28,20 @@ public class CreateLoggersElement {
     public static Element createLoggersElement(Document document, Properties properties) {
         Element loggersElement = document.createElement(XMLConst.LOGGERS);
         Set<String> propNames = properties.stringPropertyNames();
+        
+        Iterator<String> iterator = propNames.iterator();
+        while(iterator.hasNext()) {
+            String name = iterator.next();
+            if(!name.startsWith(PropertiesConst.LOGGER))
+                iterator.remove();
+        }
+        /*
         for(String name : propNames) {
             if(!name.startsWith(Log4j2Constants.LOGGER)) {
                 propNames.remove(name);
             }
         }
+        */
         
         //same as appender
         while(!propNames.isEmpty()) {
@@ -47,7 +57,7 @@ public class CreateLoggersElement {
     private static Element createLoggerElement(Document document, Set<String> propNames, Properties properties) {
         Element loggerEl = document.createElement(XMLConst.LOGGER);
         String firstName = propNames.iterator().next();
-        String[] splitName = firstName.split(".");
+        String[] splitName = firstName.split("\\.");
         String prefix = splitName[0]+"."+splitName[1];
         //set atributes
         loggerEl.setAttribute("name", properties.getProperty(prefix+".name"));
@@ -60,14 +70,22 @@ public class CreateLoggersElement {
             loggerEl.setAttribute("additivity", properties.getProperty(prefix+".additivity"));
             propNames.remove(prefix+".additivity");
         }
-        //create child filters and create child appender ref        
-        loggerEl.appendChild(createLoggerFilters(document, properties, prefix));
-        for(String n : propNames) {
-            if(n.startsWith(prefix+".appenderRef")) {
-                propNames.remove(n);
-            }
+        //create child filters and create child appender ref     
+        Element filters = createLoggerFilters(document, properties, prefix);
+        if (filters != null)
+            loggerEl.appendChild(filters);
+        
+        Element appenderRef = createAppenderRef(document, properties, prefix);
+        if (appenderRef != null)
+            loggerEl.appendChild(appenderRef);
+        
+        Iterator<String> iterator = propNames.iterator();
+        while(iterator.hasNext()) {
+            String name = iterator.next();
+            if(name.startsWith(prefix+".appenderRef"))
+                iterator.remove();
         }
-        loggerEl.appendChild(createAppenderRef(document, properties, prefix));
+               
         return loggerEl;
     }
     private static Element createRootLoggerElement(Document document, Properties properties) {
@@ -98,17 +116,22 @@ public class CreateLoggersElement {
     private static Element createLoggerFilters(Document document, Properties properties, String prefix) {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> loggerFilters = getLoggerFilterPropNames(properties, prefix);
+        
         while(!loggerFilters.isEmpty()) {
-            filtersElement.appendChild(createLogFilter(document, properties, loggerFilters));
+            Element filter = createLogFilter(document, properties, loggerFilters);
+            if (filter == null)
+                break;
+            filtersElement.appendChild(filter);
         }
+        
         if(filtersElement.hasChildNodes()) {
-        return filtersElement;
+            return filtersElement;
         }
         return null;
     }
     private static Element createLogFilter(Document document, Properties properties, Set<String> filterPropNames) {
         Element filterEl = document.createElement(XMLConst.FILTER);
-        String[] splitSubName = filterPropNames.iterator().next().split(".");
+        String[] splitSubName = filterPropNames.iterator().next().split("\\.");
         String filterPrefix = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2]+"."+splitSubName[3];
         
         filterEl.setAttribute("type", properties.getProperty(filterPrefix+".type"));

@@ -26,7 +26,7 @@ public class CreateFiltersElement {
     public static Element createFiltersElement(Document document, Properties properties) {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> propNames = properties.stringPropertyNames();
-        for(String name : propNames) {
+        for(String name : propNames) {            
             /*
             if(name.startsWith(PropertiesConst.FILTER+"."+PropertiesConst.THRESHOLD)) {
                 continue;
@@ -44,22 +44,22 @@ public class CreateFiltersElement {
             Element filter = document.createElement(XMLConst.FILTER);
 
             filter.setAttribute("type", filterType);
-            propNames.remove(filterPrefix + ".type");
+            //propNames.remove(filterPrefix + ".type");
             if (propNames.contains(filterPrefix + ".level")) {
                 filter.setAttribute("level", properties.getProperty(filterPrefix + ".level"));
-                propNames.remove(filterPrefix + ".level");
+                //propNames.remove(filterPrefix + ".level");
             }
             if (propNames.contains(filterPrefix + ".marker")) {
                 filter.setAttribute("marker", properties.getProperty(filterPrefix + ".marker"));
-                propNames.remove(filterPrefix + ".marker");
+                //propNames.remove(filterPrefix + ".marker");
             }
             if (propNames.contains(filterPrefix + ".onMatch")) {
                 filter.setAttribute("onMatch", properties.getProperty(filterPrefix + ".onMatch"));
-                propNames.remove(filterPrefix + ".onMatch");
+                //propNames.remove(filterPrefix + ".onMatch");
             }
             if (propNames.contains(filterPrefix + ".onMismatch")) {
                 filter.setAttribute("onMismatch", properties.getProperty(filterPrefix + ".onMismatch"));
-                propNames.remove(filterPrefix + ".onMismatch");
+                //propNames.remove(filterPrefix + ".onMismatch");
             }
             boolean containKeyPair = false;
             for (String s : propNames) {
@@ -70,11 +70,11 @@ public class CreateFiltersElement {
             }
             if (containKeyPair) {
                 Element keyPair = document.createElement(properties.getProperty(filterPrefix + ".pair.type"));
-                propNames.remove(filterPrefix + ".pair.type");
+                //propNames.remove(filterPrefix + ".pair.type");
                 keyPair.setAttribute("key", properties.getProperty(filterPrefix + ".pair.key"));
-                propNames.remove(filterPrefix + ".pair.key");
+               // propNames.remove(filterPrefix + ".pair.key");
                 keyPair.setAttribute("value", properties.getProperty(filterPrefix + ".pair.value"));
-                propNames.remove(filterPrefix + ".pair.value");
+                //propNames.remove(filterPrefix + ".pair.value");
                 filter.appendChild(keyPair);
             }
             filtersElement.appendChild(filter);

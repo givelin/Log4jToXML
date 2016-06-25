@@ -9,6 +9,7 @@ import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import org.w3c.dom.Document;
@@ -29,13 +30,23 @@ public class CreateAppendersElement {
     public static Element createAppendersElement(Document document, Properties properties) {
         Element appendersElement = document.createElement(XMLConst.APPENDERS);
         Set<String> propNames = properties.stringPropertyNames();
+        Iterator<String> iterator = propNames.iterator();
+        while(iterator.hasNext()) {
+            String name = iterator.next();
+            if(!name.startsWith(PropertiesConst.APPENDER))
+                iterator.remove();
+        }
+        /*
         for(String name : propNames) {
             if(!name.startsWith(Log4j2Constants.APPENDER)) {
                 propNames.remove(name);
             }
         }
+        */
+        
         while(!propNames.isEmpty()) {
             appendersElement.appendChild(createAppender(document, properties, getAppendersOfOneType(propNames)));
+            
         }
         if(appendersElement.hasChildNodes()) {
             return appendersElement;
@@ -44,7 +55,7 @@ public class CreateAppendersElement {
     }
     private static Element createAppender(Document document, Properties properties, Set<String> propNames) {
         String firstName = propNames.iterator().next();
-        String[] splitName = firstName.split(".");
+        String[] splitName = firstName.split("\\.");
         String prefix = splitName[0]+"."+splitName[1];
         
         Element appendeer = document.createElement(properties.getProperty(prefix+".type"));
@@ -52,8 +63,17 @@ public class CreateAppendersElement {
         if(propNames.contains(prefix+".fileName")) {
             appendeer.setAttribute("fileName", properties.getProperty(prefix+".fileName"));
         }
-        appendeer.appendChild(appenderLayout(document, properties, propNames, prefix));
-        appendeer.appendChild(appenderFilters(document, properties, propNames, prefix));
+        
+        Element layout = appenderLayout(document, properties, propNames, prefix);
+        if (layout != null) {
+            appendeer.appendChild(layout);
+        }
+        
+        Element filters = appenderFilters(document, properties, propNames, prefix);
+        if (filters != null) {
+            appendeer.appendChild(filters);
+        }
+        
         return appendeer;
     }
     private static Element appenderLayout(Document document, Properties properties, Set<String> propNames, String prefix) {
@@ -67,9 +87,14 @@ public class CreateAppendersElement {
     private static Element appenderFilters(Document document, Properties properties, Set<String> propNames, String prefix) {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> appenderFilters = getAppenderFilterPropNames(properties, prefix);
+        
         while(!appenderFilters.isEmpty()) {
-            filtersElement.appendChild(createAppendFilter(document, properties, appenderFilters));
+            Element filter = createAppendFilter(document, properties, appenderFilters);
+            if (filter == null)
+                break;
+            filtersElement.appendChild(filter);
         }
+        
         if(filtersElement.hasChildNodes()) {
             return filtersElement;
         }
@@ -78,8 +103,28 @@ public class CreateAppendersElement {
 
     private static Element createAppendFilter(Document document, Properties properties, Set<String> filterPropNames) {
         Element filterEl = document.createElement(XMLConst.FILTER);
-        String[] splitSubName = filterPropNames.iterator().next().split(".");
-        String filterPrefix = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
+        /*
+        input should look like:
+        
+        appender.list.filter.threshold.type = ThresholdFilter
+        appender.list.filter.threshold.level = error        
+        
+        ill try to write it in a general way so that it works even if its a bit different
+        */
+        
+        String[] splitSubName = filterPropNames.iterator().next().split("\\.");
+        String filterPrefix = ""; // = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
+        int i = 0;
+        while (i<splitSubName.length && !splitSubName[i].equals(PropertiesConst.FILTER)) {
+            filterPrefix += splitSubName[i]+".";
+            i++;
+        }
+        if (i+1 < splitSubName.length) {
+            filterPrefix += splitSubName[i]+"."+splitSubName[i+1];
+        }
+        else {
+            return null;
+        }
         
         filterEl.setAttribute("type", properties.getProperty(filterPrefix+".type"));
         filterPropNames.remove(filterPrefix+".type");
@@ -119,13 +164,18 @@ public class CreateAppendersElement {
     }
     
     private static Set<String> getAppendersOfOneType(Set<String> names) {
-        if(names.isEmpty()) return Collections.EMPTY_SET;
-        String firstName = names.iterator().next();
-        String[] splitName = firstName.split(".");
+        if(names.isEmpty()) return Collections.EMPTY_SET; //should never happen
+        Iterator<String> it = names.iterator();
+        String firstName = it.next();        
+        String[] splitName = firstName.split("\\.");
         Set<String> out = new HashSet<>();
-        for(String n : names) {
+        
+        it = names.iterator(); //reset iterator
+        while(it.hasNext()) {
+            String n = it.next();
             if(n.startsWith(splitName[0]+"."+splitName[1])) {
                 out.add(n);
+                it.remove();
             }
         }
         return out;

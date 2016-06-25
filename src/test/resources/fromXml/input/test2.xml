@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+<Appenders>
+	<List name="List">
+		<Filters>
+			<Filter level="error" type="ThresholdFilter"/>
+		</Filters>
+	</List>
+	<RollingFile fileName="${filename}" name="RollingFile">
+		<PatternLayout pattern=""/>
+	</RollingFile>
+	<Console name="STDOUT">
+		<PatternLayout pattern=""/>
+	</Console>
+</Appenders>
+
+<Properties>
+	<Property name=".filename">target/rolling/rollingtest.log</Property>
+</Properties>
+<Filters>
+	<Filter level="debug" type="threshold"/>
+	<Filter level="debug" type="threshold"/>
+</Filters>
+<ThresholdFilter level="filter.threshold.level"/>
+
+<Loggers>
+	<Logger additivity="false" level="debug" name="com.example.my.app">
+		<AppenderRef ref="RollingFile"/>
+	</Logger>
+	<Root level="info">
+		<AppenderRef ref="STDOUT"/>
+	</Root>
+</Loggers>
+</Configuration>

@@ -47,14 +47,14 @@ public class XMLWriter {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
-
+        
         try {
             builder = factory.newDocumentBuilder();
             document = builder.newDocument();
             Element mainRootElement = document.createElement(XMLConst.CONFIGURATION);
             //saying that root element of document is Configuration
             document.appendChild(mainRootElement);
-
+            
             //here set for mainRootElement attributes
             setConfigurationAttributes(properties, mainRootElement);
             //add childs to main root
