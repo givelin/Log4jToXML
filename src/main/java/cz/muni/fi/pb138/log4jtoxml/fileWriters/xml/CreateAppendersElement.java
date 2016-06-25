@@ -5,7 +5,6 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.fileWriters.xml;
 
-import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.constants.XMLConst;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class CreateAppendersElement {
         Iterator<String> iterator = propNames.iterator();
         while(iterator.hasNext()) {
             String name = iterator.next();
-            if(!name.startsWith(PropertiesConst.APPENDER))
+            if(!name.startsWith("appender"))
                 iterator.remove();
         }
         /*
@@ -115,7 +114,7 @@ public class CreateAppendersElement {
         String[] splitSubName = filterPropNames.iterator().next().split("\\.");
         String filterPrefix = ""; // = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
         int i = 0;
-        while (i<splitSubName.length && !splitSubName[i].equals(PropertiesConst.FILTER)) {
+        while (i<splitSubName.length && !splitSubName[i].equals("filter")) {
             filterPrefix += splitSubName[i]+".";
             i++;
         }

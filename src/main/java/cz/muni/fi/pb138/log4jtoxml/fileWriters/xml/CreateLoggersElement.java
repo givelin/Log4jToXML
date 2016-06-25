@@ -32,7 +32,7 @@ public class CreateLoggersElement {
         Iterator<String> iterator = propNames.iterator();
         while(iterator.hasNext()) {
             String name = iterator.next();
-            if(!name.startsWith(PropertiesConst.LOGGER))
+            if(!name.startsWith("logger"))
                 iterator.remove();
         }
         /*
