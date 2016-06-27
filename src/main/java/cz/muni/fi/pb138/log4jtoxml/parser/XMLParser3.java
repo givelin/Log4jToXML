@@ -34,7 +34,7 @@ public class XMLParser3 {
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
-    private Log4j2Object thresholdFilter;
+    //private Log4j2Object thresholdFilter;
     
     
     public XMLParser3 (Document doc) {
@@ -48,6 +48,22 @@ public class XMLParser3 {
         for (int i=0; i<children.getLength(); i++) {
             if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
                 //System.out.println(children.item(i).getNodeName());
+                String str = children.item(i).getNodeName();
+                if (str.equals(CUSTOM_LEVELS)) {
+                    customLevels = parseNode(children.item(i));
+                } else if (str.equals(PROPERTIES)) {
+                    properties = parseNode(children.item(i));
+                } else if (str.toLowerCase().contains(FILTER)) {
+                    filters = parseNode(children.item(i));
+                } else if (str.equals(APPENDERS)) {
+                    appenders = parseNode(children.item(i));
+                } else if (str.equals(LOGGERS)) {
+                    loggers = parseNode(children.item(i));
+                } else {
+                    System.err.println(children.item(i).getNodeName());
+                    throw new IllegalArgumentException();
+                }
+                /*
                 switch (children.item(i).getNodeName()) {
                     case CUSTOM_LEVELS:
                         customLevels = parseNode(children.item(i));
@@ -75,13 +91,14 @@ public class XMLParser3 {
                         throw new IllegalArgumentException();
                     }
                 }
+                */
             }
         }
         ArrayList<Log4j2Object> result = new ArrayList<>();
         result.add(config);
         result.add(customLevels);
         result.add(properties);
-        result.add(thresholdFilter);
+        //result.add(thresholdFilter);
         result.add(filters);
         result.add(appenders);
         result.add(loggers);

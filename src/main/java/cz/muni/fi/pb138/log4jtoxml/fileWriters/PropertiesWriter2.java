@@ -25,17 +25,17 @@ public class PropertiesWriter2 {
     private Log4j2Object config;
     private Log4j2Object customLevels;
     private Log4j2Object properties;
-    private Log4j2Object thresholdFilter;
+    //private Log4j2Object thresholdFilter;
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
-    private String outputFilename;
+    //private String outputFilename;
     
     public PropertiesWriter2 (List<Log4j2Object> init) {
         config = init.get(0);
         customLevels = init.get(1);
         properties = init.get(2);
-        thresholdFilter = init.get(3);;
+        //thresholdFilter = init.get(3);;
         filters = init.get(4);
         appenders = init.get(5);
         loggers = init.get(6);
@@ -52,13 +52,15 @@ public class PropertiesWriter2 {
                 writer.write("\n");
             }
             if (!isNullOrEmpty(properties)) {
-                writeDeep(properties, writer, "property.");
+                writeDeep(properties, writer, "");
                 writer.write("\n");
             }
+            /*
             if (!isNullOrEmpty(thresholdFilter)) {
                 writeDeep(thresholdFilter, writer, "filter.threshold.");
                 writer.write("\n");
             }
+            */
             if (!isNullOrEmpty(filters)) {
                 if (filters.getChildren().isEmpty()) {
                     writeDeep(filters, writer, "filter.");
@@ -114,9 +116,11 @@ public class PropertiesWriter2 {
                     }
                     str += nameHelper(obj.getName());
                     if (!obj.getName().equals(str) && !str.equals("")) {
-                        obj.addAttribute("type", obj.getName().substring(0,str.indexOf(str)));
+                        int stopper = obj.getName().toLowerCase().indexOf(str);
+                        obj.addAttribute("type", obj.getName().substring(0, stopper));
                     }
-                    str += ".";
+                    if (!str.equals(""))
+                       str += ".";
                 }
                 writeAppender(obj, writer, path + str);
             }
@@ -134,19 +138,25 @@ public class PropertiesWriter2 {
                 String str = "";
                 String appRef = appender;
                 if (obj.getName() != null) {
-                    // FILTER !!!
-                    str = obj.getName() + ".";
-                    if (obj.getName().equals(Log4j2Constants.LOGGER)) {
-                        str = obj.getName() + "." + getLoggerSuffix(obj) + ".";
+                    //str = obj.getName() + ".";
+                    str += nameHelper(obj.getName());
+                    if (!obj.getName().equals(str) && !str.equals("")) {
+                        int stopper = obj.getName().toLowerCase().indexOf(str);
+                        obj.addAttribute("type", obj.getName().substring(0, stopper));
+                    }
+                    if (obj.getName().toLowerCase().equals(Log4j2Constants.LOGGER)) {
+                        str = obj.getName() + "." + getLoggerSuffix(obj);
                         appRef = getLoggerSuffix(obj);
                     }
                     if (obj.getName().equals(Log4j2Constants.APPENDE_REF)) {
-                        str = obj.getName() + "." + appRef + ".";
+                        str = obj.getName() + "." + appRef ;
                     }
-                    if (obj.getName().equals(Log4j2Constants.ROOT)){
-                        str = "rootLogger.";
+                    if (obj.getName().toLowerCase().equals(Log4j2Constants.ROOT)){
+                        str = "rootLogger";
                         appRef = getLoggerSuffix(obj);
                     }
+                    if (!str.equals(""))
+                        str+=".";
                 }
                 writeLogger(obj, writer, path + str, appRef);
             }
@@ -175,7 +185,7 @@ public class PropertiesWriter2 {
         }
         for (Log4j2Object obj : appenders.getChildren()) {
             if (obj.getAttributes().get("name").equals(appenderRef)) {
-                return appenderRef;
+                return obj.getAttributes().get("type");
             }
         }
         return "EMPTY";
