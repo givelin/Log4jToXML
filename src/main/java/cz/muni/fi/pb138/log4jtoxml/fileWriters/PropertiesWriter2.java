@@ -177,10 +177,22 @@ public class PropertiesWriter2 {
  */
     private void writeLogger (Log4j2Object start, Writer writer, String path, String appender) throws IOException {
         if (!start.getAttributes().isEmpty()) {
-            for (Entry e : start.getAttributes().entrySet()) {
-                writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
-            } 
+            if (start.getName().toLowerCase().equals("keyvaluepair")) { //special case
+                String keyPath = path.toLowerCase();
+                keyPath = keyPath.substring(0, keyPath.lastIndexOf("keyvaluepair")) + "pair.";
+                writer.write(keyPath + "type = KeyValuePair\n"); //suggests there are other types, none that i know of though
+                
+                for (Entry e : start.getAttributes().entrySet()) {
+                    writer.write(keyPath + e.getKey() + " = " + e.getValue() + "\n");
+                } 
+            }
+            else {
+                for (Entry e : start.getAttributes().entrySet()) {
+                    writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
+                } 
+            }
         }
+        
         if (!start.getChildren().isEmpty()) { 
             for (Log4j2Object obj: start.getChildren()) {
                 String str = "";
