@@ -36,25 +36,28 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
     public void convert(File input, File output) {
         //TODO
         //reading file, get all data
-        Properties properties = null;
-        try {
-            properties = (new InputLoader(input)).getProperties();
-        } catch (IOException ex) {
-            Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        XMLWriter.writeData(output, properties);
         
-        if(validator==null) {
-            validator = new XMLValidatorImpl();
-        }
-        if(validator.isXMLFileValid(output)) {
-            // somethink like System.out.println("Have a nice day, Mr. Bond");
-        } else {
-            //throw exception about non valid output
-        }
-
-        throw new UnsupportedOperationException("Not supported yet.");
+            XMLWriter writer = new XMLWriter();
+            InputLoader loader = new InputLoader(input);
+            try{
+                Properties prop = loader.getProperties();
+                writer.writeData(output, prop);
+            }
+            catch(IOException e)
+            {
+                Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, e);
+                System.out.printf("An error occured during conversion. We are sorry. Please don't cry.");
+            }
+            /*
+            if(validator==null) {
+                validator = new XMLValidatorImpl();
+            }
+            if(validator.isXMLFileValid(output)) {
+                // somethink like System.out.println("Have a nice day, Mr. Bond");
+            } else {
+                //throw exception about non valid output
+            }
+            */
     }
     
 }

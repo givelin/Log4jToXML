@@ -7,6 +7,8 @@ package cz.muni.fi.pb138.log4jtoxml;
 
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.XMLWriter;
+import cz.muni.fi.pb138.log4jtoxml.impl.ConfigurationConverterFromPropToXml;
+import cz.muni.fi.pb138.log4jtoxml.impl.ConfigurationConverterFromXmlToProp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -153,25 +155,13 @@ public class Main {
         
         if (getExtension(inFile.getAbsolutePath()).equals("xml")){
             //convert XML -> properties
-            System.out.println("converting XML to properties");
-            System.out.println("file to be converted: ");
-            System.out.println(inFile.getAbsolutePath());
-            System.out.println("file to be created: ");
-            System.out.println(outFile.getAbsolutePath());
+            ConfigurationConverterFromXmlToProp converter = new ConfigurationConverterFromXmlToProp();
+            converter.convert(inFile, outFile);
         }
         else {
             //convert properties -> XML
-            System.out.println("converting properties to XML");
-            XMLWriter writer = new XMLWriter();
-            InputLoader loader = new InputLoader(inFile);
-            try{
-                Properties prop = loader.getProperties();
-                writer.writeData(outFile, prop);
-            }
-            catch(IOException e)
-            {
-                System.out.printf("An error occured during conversion. We are sorry. Please don't cry.");
-            }
+            ConfigurationConverterFromPropToXml converter = new ConfigurationConverterFromPropToXml();
+            converter.convert(inFile, outFile);
         }
         
     }

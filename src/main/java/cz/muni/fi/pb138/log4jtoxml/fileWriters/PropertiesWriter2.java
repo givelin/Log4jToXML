@@ -36,9 +36,9 @@ public class PropertiesWriter2 {
         customLevels = init.get(1);
         properties = init.get(2);
         //thresholdFilter = init.get(3);;
-        filters = init.get(4);
-        appenders = init.get(5);
-        loggers = init.get(6);
+        filters = init.get(3);
+        appenders = init.get(4);
+        loggers = init.get(5);
     }
     
     public void writeData(String output) throws UnsupportedEncodingException, FileNotFoundException, IOException {
