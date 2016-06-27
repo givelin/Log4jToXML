@@ -9,10 +9,12 @@ import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.XMLConstants;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -23,11 +25,13 @@ public class XMLValidatorImpl implements XMLValidator {
 
     @Override
     public boolean isXMLFileValid(File file) {
-        System.out.println(this.getClass().getResource("/config.xsd"));
-        String s = this.getClass().getResource("/config.xsd").toString().substring(5);     
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new File(s));
+            String path = System.getProperty("user.dir"); //could not make any "loadResource" work
+            path += "\\src\\main\\java\\cz\\muni\\fi\\pb138\\log4jtoxml\\resources\\config.xsd";
+            File s = new File(path);
+            
+            Schema schema = factory.newSchema(s);
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(file));
         } catch (IOException e) {
@@ -38,7 +42,28 @@ public class XMLValidatorImpl implements XMLValidator {
             return false;
         }
         return true;
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean isXMLFileValid(Document doc) {   
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            String path = System.getProperty("user.dir");
+            path += "\\src\\main\\java\\cz\\muni\\fi\\pb138\\log4jtoxml\\resources\\config.xsd";
+            File s = new File(path);
+            
+            Schema schema = factory.newSchema(s);
+            Validator validator = schema.newValidator();
+            DOMSource domSource=new DOMSource(doc);
+            validator.validate(domSource);
+        } catch (IOException e) {
+            System.out.println("I/O Exception: " + e.getMessage());
+            return false;
+        } catch (SAXException e1) {
+            System.out.println("SAX Exception: " + e1.getMessage());
+            return false;
+        }
+        return true;
     }
     
 }

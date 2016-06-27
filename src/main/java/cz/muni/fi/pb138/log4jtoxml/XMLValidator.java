@@ -6,6 +6,7 @@
 package cz.muni.fi.pb138.log4jtoxml;
 
 import java.io.File;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -18,4 +19,5 @@ public interface XMLValidator {
      * @return Return true if configuration file is valid, else return false
      */
     public boolean isXMLFileValid(File file);
+    public boolean isXMLFileValid(Document doc);
 }

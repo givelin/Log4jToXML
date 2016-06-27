@@ -1,6 +1,7 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
+import cz.muni.fi.pb138.log4jtoxml.XMLNormalizator;
 import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertieWriter;
@@ -41,8 +42,21 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
     public void convert(File input, File output) {
         InputLoader loader = new InputLoader(input);
         try {
+            
         Document doc = loader.getDOM();
+        XMLNormalizator normalizator = new XMLNormalizator();
+        doc = normalizator.convert(doc);
+        doc = normalizator.toConcise(doc);
+        
+        XMLValidatorImpl validator = new XMLValidatorImpl();
+        Boolean valid = validator.isXMLFileValid(doc);
+        System.out.println(valid);
+        
+        
         XMLParser3 parser = new XMLParser3(doc);
+        
+        
+        
         PropertiesWriter2 writer = new PropertiesWriter2(parser.parse());
         }
         catch (ParserConfigurationException | IOException | SAXException e) {

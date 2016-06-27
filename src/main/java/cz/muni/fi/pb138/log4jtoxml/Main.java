@@ -5,13 +5,10 @@
  */
 package cz.muni.fi.pb138.log4jtoxml;
 
-import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
-import cz.muni.fi.pb138.log4jtoxml.fileWriters.XMLWriter;
 import cz.muni.fi.pb138.log4jtoxml.impl.ConfigurationConverterFromPropToXml;
 import cz.muni.fi.pb138.log4jtoxml.impl.ConfigurationConverterFromXmlToProp;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Scanner;
 
 /**
@@ -142,10 +139,7 @@ public class Main {
         return extension;
     }
     
-    public static void main(String[] args) {
-        
-        String inPath;
-        String outPath;
+    public static void main(String[] args) {        
         File inFile;
         File outFile;
         
