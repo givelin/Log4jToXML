@@ -378,7 +378,7 @@
     <!--ListAppender type-->
     <xs:complexType name="ListAppenderType"/>
     	<xs:sequence>
-   	    <xs:element name="ThresholdFilter" type="ThresholdFilterType"/>
+   	    <xs:element name="ThresholdFilter" type="ThresholdFilterType" minOccurs="0" maxOccurs="1"/>
     	</xs:sequence>
     	<xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
