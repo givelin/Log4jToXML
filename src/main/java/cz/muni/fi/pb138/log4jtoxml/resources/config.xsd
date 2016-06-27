@@ -1012,6 +1012,7 @@
     <!--Logger type-->
     <xs:complexType name="LoggersType">
         <xs:sequence>
+       	    <xs:element name="Logger" type="LoggerType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Root" type="RootType"/>
             <xs:element name="Logger" type="LoggerType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
