@@ -66,7 +66,7 @@ public class XMLNormalizator {
                 </PatternLayout>
                 */
                 Element grandparent = (Element) parent.getParentNode(); //lets hope it wont ever be null
-                grandparent.setAttribute(parent.getNodeName(), n.getTextContent());
+                grandparent.setAttribute(parent.getNodeName().toLowerCase(), n.getTextContent());
                 parent.removeChild(n);
                 grandparent.removeChild(parent);
                 
