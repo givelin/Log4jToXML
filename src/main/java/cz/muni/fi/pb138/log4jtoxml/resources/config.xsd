@@ -49,6 +49,7 @@
             <xs:element name="JMS" type="JMSAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="JPA" type="JPAAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Kafka" type="KafkaAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="List" type="ListAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="MemoryMappedFile" type="MemoryMappedFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="NoSQL" type="NoSQLAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
@@ -373,6 +374,13 @@
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="topic" type="xs:string" use="required"/>
         <xs:attribute name="ignoreExceptions" type="xs:boolean" use="optional"/>
+    </xs:complexType>
+    <!--ListAppender type-->
+    <xs:complexType name="ListAppenderType"/>
+    	<xs:sequence>
+   	    <xs:element name="ThresholdFilter" type="ThresholdFilterType"/>
+    	</xs:sequence>
+    	<xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
     <!--MemoryMappedFileAppender type-->
     <xs:complexType name="MemoryMappedFileAppenderType">
