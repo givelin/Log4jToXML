@@ -28,7 +28,7 @@ public class CreatePropertiesElement {
         Set<String> propNames = properties.stringPropertyNames();
         for(String name : propNames) {
             if (name.startsWith(Log4j2Constants.PROPERTY)) {
-                String propName = name.substring(Log4j2Constants.PROPERTY.length());
+                String propName = name.substring(Log4j2Constants.PROPERTY.length()+1);
                 Element propElement = document.createElement(XMLConst.PROPERTY);
                 propElement.setAttribute("name", propName);
                 propElement.appendChild(document.createTextNode(properties.getProperty(name)));

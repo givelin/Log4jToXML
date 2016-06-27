@@ -56,6 +56,11 @@ public class CreateAppendersElement {
             appendeer.appendChild(layout);
         }
         
+        Element policies = appenderPolicies(document, properties, propNames, prefix);
+        if (policies != null) {
+            appendeer.appendChild(policies);
+        }
+        
         Element filters = appenderFilters(document, properties, propNames, prefix);
         if (filters != null) {
             appendeer.appendChild(filters);
@@ -64,13 +69,115 @@ public class CreateAppendersElement {
         return appendeer;
     }
     private static Element appenderLayout(Document document, Properties properties, Set<String> propNames, String prefix) {
-        if(propNames.contains(prefix+".layout.type")) {
+        if(propNames.contains(prefix+".layout.type")) {            
             Element layout = document.createElement(properties.getProperty(prefix+".layout.type"));
-            layout.setAttribute("pattern", properties.getProperty(prefix+"layout.pattern"));
+            layout.setAttribute("pattern", properties.getProperty(prefix+".layout.pattern"));
             return layout;
         }
         return null;
     }
+    
+    private static Element createAppenderPolicy(Document document, Properties properties, Set<String> policyPropNames, String typePath) {
+        //Element filterEl = document.createElement(XMLConst.FILTER);
+        /*
+        input should look like:
+        
+        appender.rolling.policies.type = Policies
+        appender.rolling.policies.time.type = TimeBasedTriggeringPolicy
+        appender.rolling.policies.time.interval = 2
+        appender.rolling.policies.time.modulate = true
+        appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+        appender.rolling.policies.size.size=100MB      
+        
+        ill try to write it in a general way so that it works even if its a bit different
+        */
+        
+        
+        String type = properties.getProperty(typePath+"type");
+        if (type == null) {
+            return null;
+        }
+        Element policy = document.createElement(type);
+        
+        Set<String> policyNames = getAppenderPolicyPropNames(properties, typePath);
+        policyPropNames.remove(typePath+"type");
+        policyNames.remove(typePath+"type");
+        
+        Iterator<String> it = policyNames.iterator();
+        
+        
+        
+        while(it.hasNext()){
+            String current = it.next();
+            int attPosition = current.lastIndexOf(".");            
+            String att = current.substring(attPosition+1);
+            String val = properties.getProperty(current);
+            /*ive noticed that if its size, it shouldnt contain units
+            i guess nobody knows why...
+            */
+            if (att.equals("size")) {
+                val = val.replaceAll("[^0-9.]+","");
+            }
+            
+            policy.setAttribute(att, val);
+            policyPropNames.remove(current);
+        }
+        
+        return policy;
+    }
+    
+    private static Set<String> getAppenderPoliciesPropNames(Properties properties, String prefix) {
+        Set<String> names = new HashSet<>();
+        for (String s : properties.stringPropertyNames()) {
+            if(s.startsWith(prefix+".policies")) {
+                names.add(s);
+            }
+        }
+        return names;
+    }
+    
+    private static Set<String> getAppenderPolicyPropNames(Properties properties, String prefix) {
+        Set<String> names = new HashSet<>();
+        for (String s : properties.stringPropertyNames()) {
+            if(s.startsWith(prefix)) {
+                names.add(s);
+            }
+        }
+        return names;
+    }
+    
+    private static Element appenderPolicies(Document document, Properties properties, Set<String> propNames, String prefix) {
+        Element policiesElement = document.createElement(XMLConst.POLICIES);
+        
+        if(!propNames.contains(prefix+".policies.type")) {
+            return null;
+        }
+        
+        Set<String> appenderPolicies = getAppenderPoliciesPropNames(properties, prefix);
+        appenderPolicies.remove(prefix+".policies.type");
+        
+        while(!appenderPolicies.isEmpty()) {
+            Iterator<String> it = appenderPolicies.iterator();
+            String first = it.next();
+            String useless = "appender.rolling.policies.";
+            String type = first.substring(useless.length());
+            int typeEnd = type.indexOf(".");
+            type = type.substring(0,typeEnd+1);
+            String typePath = first.substring(0, useless.length() + type.length());
+            
+            Element policy = createAppenderPolicy(document, properties, appenderPolicies, typePath);
+            if (policy == null)
+                break;
+            policiesElement.appendChild(policy);
+        }
+        
+        if(policiesElement.hasChildNodes()) {
+            return policiesElement;
+        }
+        return null;
+    }
+    
+    
     private static Element appenderFilters(Document document, Properties properties, Set<String> propNames, String prefix) {
         Element filtersElement = document.createElement(XMLConst.FILTERS);
         Set<String> appenderFilters = getAppenderFilterPropNames(properties, prefix);

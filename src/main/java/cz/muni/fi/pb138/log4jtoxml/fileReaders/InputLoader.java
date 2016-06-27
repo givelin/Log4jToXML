@@ -12,7 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -88,7 +90,7 @@ public class InputLoader {
  */
     public Properties getProperties() throws IOException {
         propertiesDoc = new Properties();
-        propertiesDoc.load(this.in);
+        propertiesDoc.load(this.in);        
         return propertiesDoc;
     }
 }

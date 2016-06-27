@@ -30,10 +30,7 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
     }
 
     @Override
-    public void convert(File input, File output) {
-        //TODO
-        //reading file, get all data
-        
+    public void convert(File input, File output) {        
             XMLWriter writer = new XMLWriter();
             InputLoader loader = new InputLoader(input);
             try{
