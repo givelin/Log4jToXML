@@ -54,6 +54,7 @@
             <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Rewrite" type="RewriteAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="RolingFile" type="RolingFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="RollingRandomAccessFile" type="RollingRandomAccessFileAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Routing" type="RoutingAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="Socket" type="SocketAppenderType" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="STMP" type="STMPAppenderType" minOccurs="0" maxOccurs="unbounded"/>
@@ -508,6 +509,47 @@
     </xs:complexType>
     <!--RollingFileAppender type-->
     <xs:complexType name="RolingFileAppenderType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:sequence>
+                    <xs:element name="Filters" type="FiltersType" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element name="BurstFilter" type="BurstFilterType"/>
+                    <xs:element name="DynamicThresholdFilter" type="DynamicThresholdFilterType"/>
+                    <xs:element name="MapFilter" type="MapFilterType"/>
+                    <xs:element name="MarkerFilter" type="MarkerFilterType"/>
+                    <xs:element name="RegexFilter" type="RegexFilterType"/>
+                    <xs:element name="ScriptFilter" type="ScriptFilterType"/>
+                    <xs:element name="StructuredDataFilter" type="StructuredDataFilterType"/>
+                    <xs:element name="ThreadContextMapFilter" type="ThreadContextMapFilterType"/>
+                    <xs:element name="ThresholdFilter" type="ThresholdFilterType"/>
+                    <xs:element name="TimeFilter" type="TimeFilterType"/>
+                </xs:choice>
+            </xs:choice>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:element name="GelfLayout" type="GelfLayoutType"/>
+                <xs:element name="HTMLLayout" type="HTMLLayoutType"/>
+                <xs:element name="JSONLayout" type="JSONLayoutType"/>
+                <xs:element name="PatternLayout" type="PatternLayoutType"/>
+                <xs:element name="RFC5424Layout" type="RFC5424LayoutType"/>
+                <xs:element name="SyslogLayout" type="SyslogLayoutType"/>
+                <xs:element name="XMLLayout" type="XMLLayoutType"/>
+            </xs:choice>
+            <xs:element name="Policies" type="RollingFilePoliciesType"/>
+            <xs:element name="DefaultRolloverStrategy" type="DefaultRolloverStrategyType"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="fileName" type="xs:string" use="required"/>
+        <xs:attribute name="append" type="xs:boolean" use="optional"/>
+        <xs:attribute name="bufferedIO" type="xs:boolean" use="optional"/>
+        <xs:attribute name="bufferSize" type="xs:integer" use="optional"/>
+        <xs:attribute name="immediateFlush" type="xs:boolean" use="optional"/>
+        <xs:attribute name="ignoreExceptions" type="xs:boolean" use="optional"/>
+        <xs:attribute name="filePattern" type="xs:string" use="optional"/>
+    </xs:complexType>
+    <!--RollingRandomAccessFileAppender type-->
+    <xs:complexType name="RollingRandomAccessFileAppenderType">
         <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="1">
                 <xs:sequence>
@@ -1257,6 +1299,7 @@
                 <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType"/>
                 <xs:element name="Rewrite" type="RewriteAppenderType"/>
                 <xs:element name="RolingFile" type="RolingFileAppenderType"/>
+                <xs:element name="RollingRandomAccessFile" type="RollingRandomAccessFileAppenderType"/>
                 <xs:element name="Socket" type="SocketAppenderType"/>
                 <xs:element name="STMP" type="STMPAppenderType"/>
                 <xs:element name="Syslog" type="SyslogAppenderType"/>
