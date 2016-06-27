@@ -8,6 +8,7 @@ package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class PropertiesWriter2 {
  * 
  * @param  output path to the output file
  */
-    public void writeData(String output) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+    public void writeData(File output) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output), "utf-8"))) {
             if (!isNullOrEmpty(config)) {
                 writeDeep(config, writer, "");

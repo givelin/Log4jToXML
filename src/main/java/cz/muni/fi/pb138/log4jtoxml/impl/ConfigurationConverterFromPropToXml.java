@@ -18,10 +18,7 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
     protected XMLValidator validator;
 
     @Override
-    public void convert(File input) {
-        //TODO
-        //call convert and set outpu with same name and type of xml
-        
+    public void convert(File input) {        
         String name = input.getName();
         String[] splitName = name.split(".");
         String outName ="";
@@ -42,11 +39,16 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
             try{
                 Properties prop = loader.getProperties();
                 writer.writeData(output, prop);
+                
+                validator = new XMLValidatorImpl();
+                Boolean valid = validator.isXMLFileValid(output);
+                System.out.println(valid);
+        
             }
             catch(IOException e)
             {
                 Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, e);
-                System.out.printf("An error occured during conversion. We are sorry. Please don't cry.");
+                System.out.printf("An error occured during conversion. We are sorry. Nothing can help you now.");
             }
             /*
             if(validator==null) {

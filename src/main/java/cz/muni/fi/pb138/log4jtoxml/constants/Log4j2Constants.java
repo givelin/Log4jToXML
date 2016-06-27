@@ -59,6 +59,8 @@ public class Log4j2Constants {
     
     public static final String APPENDE_REF = "AppenderRef";
 
+    public static final String RESOURCES_TEST_PREFIX = "\\src\\test\\java\\cz\\muni\\fi\\pb138\\log4jtoxml\\resources\\";
+    public static final String RESOURCES_PREFIX = "\\src\\main\\resources\\";
     
     public static String joinConst(String frst, String scnd) {
         return frst + "." + scnd;

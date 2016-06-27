@@ -6,6 +6,7 @@
 package cz.muni.fi.pb138.log4jtoxml.impl;
 
 import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.RESOURCES_PREFIX;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.XMLConstants;
@@ -52,7 +53,9 @@ public class XMLValidatorImpl implements XMLValidator {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             String path = System.getProperty("user.dir");
-            path += "\\src\\main\\java\\cz\\muni\\fi\\pb138\\log4jtoxml\\resources\\config.xsd";
+            path += RESOURCES_PREFIX;
+            //path += "config.xsd";
+            path += "config-short.xsd";
             File s = new File(path);
             
             Schema schema = factory.newSchema(s);
@@ -60,10 +63,10 @@ public class XMLValidatorImpl implements XMLValidator {
             DOMSource domSource=new DOMSource(doc);
             validator.validate(domSource);
         } catch (IOException e) {
-            System.out.println("I/O Exception: " + e.getMessage());
+            System.err.println("I/O Exception: " + e.getMessage());
             return false;
         } catch (SAXException e1) {
-            System.out.println("SAX Exception: " + e1.getMessage());
+            System.err.println("SAX Exception: " + e1.getMessage());
             return false;
         }
         return true;

@@ -4,12 +4,10 @@ import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
 import cz.muni.fi.pb138.log4jtoxml.XMLNormalizator;
 import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
-import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertieWriter;
 import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter2;
 import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser3;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,7 +23,6 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
 
     @Override
     public void convert(File input) {
-        //TODO
         String name = input.getName();
         String[] splitName = name.split(".");
         String outName ="";
@@ -34,8 +31,6 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         }
         outName+="properties";
         convert(input, new File(input.getParent(), outName));
-        
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -48,31 +43,18 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         doc = normalizator.removeNodeValues(doc);
         doc = normalizator.toConcise(doc);
         
-        XMLValidatorImpl validator = new XMLValidatorImpl();
+        validator = new XMLValidatorImpl();
         Boolean valid = validator.isXMLFileValid(doc);
         System.out.println(valid);
         
-        
         XMLParser3 parser = new XMLParser3(doc);
-        
-        
-        
         PropertiesWriter2 writer = new PropertiesWriter2(parser.parse());
+        writer.writeData(output);
         }
         catch (ParserConfigurationException | IOException | SAXException e) {
             Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, e);
-            System.out.printf("An error occured during conversion. We are sorry. Please don't cry.");
+            System.out.printf("An error occured during conversion. We are sorry. Nothing can help you now.");
         }
-        /*
-        if(validator==null) {
-            validator = new XMLValidatorImpl();
-        }
-        if(validator.isXMLFileValid(input)) {
-        //ok skip
-        } else {
-        //throw unvalid exception...
-        }
-*/
     }
     
 }
