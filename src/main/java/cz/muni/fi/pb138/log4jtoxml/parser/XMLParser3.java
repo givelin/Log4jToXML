@@ -11,11 +11,14 @@ import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTER;
 import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTERS;
 import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.LOGGERS;
 import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.PROPERTIES;
+import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.THRESHOL_FILTER;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.ValidationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -31,6 +34,7 @@ public class XMLParser3 {
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
+    private Log4j2Object thresholdFilter;
     
     
     public XMLParser3 (Document doc) {
@@ -49,7 +53,7 @@ public class XMLParser3 {
                         customLevels = parseNode(children.item(i));
                         break;
                     case PROPERTIES:
-                        properties = parseNode(children.item(i));
+                        properties = processProperties((Element)children.item(i));
                         break;
                     case FILTERS:
                         filters = parseNode(children.item(i));
@@ -63,8 +67,13 @@ public class XMLParser3 {
                     case LOGGERS:
                         loggers = parseNode(children.item(i));
                         break;
-                    default:
+                    case THRESHOL_FILTER:
+                        thresholdFilter = parseNode(children.item(i));
+                        break;
+                    default:{
+                        System.err.println(children.item(i).getNodeName());
                         throw new IllegalArgumentException();
+                    }
                 }
             }
         }
@@ -72,6 +81,7 @@ public class XMLParser3 {
         result.add(config);
         result.add(customLevels);
         result.add(properties);
+        result.add(thresholdFilter);
         result.add(filters);
         result.add(appenders);
         result.add(loggers);
@@ -86,6 +96,43 @@ public class XMLParser3 {
                 config.addAttribute(att.getNodeName(), att.getNodeValue());
             }
         }
+    }
+    
+    
+    private Log4j2Object processProperties(Element properties) {
+        Log4j2Object o = new Log4j2Object();
+        o.setName(properties.getNodeName());
+        
+        NodeList property = properties.getElementsByTagName("Property");
+        for (int i = 0; i < property.getLength(); i++) {
+            Log4j2Object child = new Log4j2Object();
+            Element prop = (Element)property.item(i);
+            
+            NamedNodeMap attributes = prop.getAttributes();
+            //predpokladam, ze properties v sobe maji jen <property name="..." value="..." />
+            if (attributes.getLength() != 2) {
+                //System.err.println("!=2");
+                continue;
+            }
+            
+            Node attName = attributes.item(0);
+            
+            if (!attName.getNodeName().equals("name")) {
+                System.err.println("name");
+                continue;
+            }
+            
+            Node attVal = attributes.item(1);
+            if (!attVal.getNodeName().equals("value")) {
+                System.err.println("value");
+                continue;
+            }
+            
+            child.addAttribute(attName.getNodeValue(), attVal.getNodeValue());
+            o.addChild(child);
+        }
+               
+        return o;
     }
     
     private Log4j2Object parseNode (Node node) {

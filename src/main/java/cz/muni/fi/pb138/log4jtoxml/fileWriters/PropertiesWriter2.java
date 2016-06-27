@@ -25,6 +25,7 @@ public class PropertiesWriter2 {
     private Log4j2Object config;
     private Log4j2Object customLevels;
     private Log4j2Object properties;
+    private Log4j2Object thresholdFilter;
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
@@ -34,44 +35,48 @@ public class PropertiesWriter2 {
         config = init.get(0);
         customLevels = init.get(1);
         properties = init.get(2);
-        filters = init.get(3);
-        appenders = init.get(4);
-        loggers = init.get(5);
+        thresholdFilter = init.get(3);;
+        filters = init.get(4);
+        appenders = init.get(5);
+        loggers = init.get(6);
     }
     
     public void writeData(String output) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output), "utf-8"))) {
             if (!isNullOrEmpty(config)) {
                 writeDeep(config, writer, "");
+                writer.write("\n");
             }
             if (!isNullOrEmpty(customLevels)) {
                 writeDeep(customLevels, writer, "");
+                writer.write("\n");
             }
             if (!isNullOrEmpty(properties)) {
-                writeDeep(properties, writer, "");
+                writeDeep(properties, writer, "property.");
+                writer.write("\n");
+            }
+            if (!isNullOrEmpty(thresholdFilter)) {
+                writeDeep(thresholdFilter, writer, "filter.threshold.");
+                writer.write("\n");
             }
             if (!isNullOrEmpty(filters)) {
                 if (filters.getChildren().isEmpty()) {
                     writeDeep(filters, writer, "filter.");
+                    writer.write("\n");
                 } 
                 else {
                     writeDeep(filters, writer, "");
+                    writer.write("\n");
                 }
             }
             if (!isNullOrEmpty(appenders)) {
                 writeAppender(appenders, writer, "appender.");
+                writer.write("\n");
             }
             if (!isNullOrEmpty(loggers)) {
                 writeLogger(loggers, writer, "", "");
+                writer.write("\n");
             }
-            /*
-            writeConfig(writer);
-            writeCustomLevels(writer);
-            writeProperties(writer);
-            writeFilters(writer);
-            writeAppender(appenders, writer, "");
-            writeLogger(loggers ,writer, "", "");
-                    */
         }
     }
     
