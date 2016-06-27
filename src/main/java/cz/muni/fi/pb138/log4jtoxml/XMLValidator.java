@@ -19,5 +19,12 @@ public interface XMLValidator {
      * @return Return true if configuration file is valid, else return false
      */
     public boolean isXMLFileValid(File file);
+    
+    /**
+     * Check if file is valid.
+     * 
+     * @param doc Input
+     * @return Return true if configuration file is valid, else return false
+     */
     public boolean isXMLFileValid(Document doc);
 }

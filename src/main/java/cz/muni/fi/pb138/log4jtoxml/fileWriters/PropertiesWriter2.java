@@ -18,29 +18,47 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
- *
+ *Class for writing properties in file
+ * 
  * @author tomf
  */
 public class PropertiesWriter2 {
+    //objects that hold information about main configuration elements
     private Log4j2Object config;
     private Log4j2Object customLevels;
     private Log4j2Object properties;
-    //private Log4j2Object thresholdFilter;
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
-    //private String outputFilename;
     
+    /**
+ * Constructor. Loads input objects from provided list
+ * 
+ * 
+ * 
+ * @param  init list of main configuration objects
+ *              Precise order expected as follows:
+ *              0: config
+ *              1: customLevels
+ *              2:properties
+ *              3:filters
+ *              4:appenders
+ *              5:loggers
+ */
     public PropertiesWriter2 (List<Log4j2Object> init) {
         config = init.get(0);
         customLevels = init.get(1);
         properties = init.get(2);
-        //thresholdFilter = init.get(3);;
         filters = init.get(3);
         appenders = init.get(4);
         loggers = init.get(5);
     }
     
+    /**
+ * Writes a properties file
+ * 
+ * @param  output path to the output file
+ */
     public void writeData(String output) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output), "utf-8"))) {
             if (!isNullOrEmpty(config)) {
@@ -55,12 +73,6 @@ public class PropertiesWriter2 {
                 writeDeep(properties, writer, "");
                 writer.write("\n");
             }
-            /*
-            if (!isNullOrEmpty(thresholdFilter)) {
-                writeDeep(thresholdFilter, writer, "filter.threshold.");
-                writer.write("\n");
-            }
-            */
             if (!isNullOrEmpty(filters)) {
                 if (filters.getChildren().isEmpty()) {
                     writeDeep(filters, writer, "filter.");
@@ -83,13 +95,23 @@ public class PropertiesWriter2 {
     }
     
     
-    
+    /**
+ * Writes a log4j2 object in file and then calls itself on all its children
+ * 
+ * @param  start Log4j2 object to be processed
+ * @param  writer writer used to write the file
+ * @param path path of currently proccesed object(prefix) - can be used to provide prefix 
+ *             if the log4j2 object structure doesn't match expected properties format
+ */
     private void writeDeep (Log4j2Object start, Writer writer, String path) throws IOException {
+        //write all attributes of current level
         if (!start.getAttributes().isEmpty()) {
             for (Entry e : start.getAttributes().entrySet()) {
                 writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
             } 
         }
+        
+        //call itself for all children in deeper level
         if (!start.getChildren().isEmpty()) { 
             for (Log4j2Object obj: start.getChildren()) {
                 String str = "";
@@ -101,20 +123,36 @@ public class PropertiesWriter2 {
         }
     }
     
+    /**
+ * Writes appender log4j2 object in file and then calls itself on all its children
+ * 
+ * @param  start Log4j2 object to be processed
+ * @param  writer writer used to write the file
+ * @param path path of currently proccesed object(prefix) - can be used to provide prefix 
+ *             if the log4j2 object structure doesn't match expected properties format;
+ *             first call should be with "appender."
+ */
     private void writeAppender (Log4j2Object start, Writer writer, String path) throws IOException {
+        //write all attributes of current level
         if (!start.getAttributes().isEmpty()) {
             for (Entry e : start.getAttributes().entrySet()) {
                 writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
             } 
         }
+        
+        //call itself for all children in deeper level
         if (!start.getChildren().isEmpty()) { 
             for (Log4j2Object obj: start.getChildren()) {
                 String str = "";
                 if (obj.getName() != null) {
                     if (path.equals("appender.")) {
+                        //this compensates for the way Log4j2 objects are read from XML
                         obj.addAttribute("type", obj.getName());
                     }
+                    
                     str += nameHelper(obj.getName());
+                    
+                    //inserts type to the output at the appropriate location
                     if (!obj.getName().equals(str) && !str.equals("")) {
                         int stopper = obj.getName().toLowerCase().indexOf(str);
                         obj.addAttribute("type", obj.getName().substring(0, stopper));
@@ -127,6 +165,15 @@ public class PropertiesWriter2 {
         }
     }
     
+    /**
+ * Writes logger log4j2 object in file and then calls itself on all its children
+ * 
+ * @param  start Log4j2 object to be processed
+ * @param  writer writer used to write the file
+ * @param  path path of currently proccesed object(prefix) - can be used to provide prefix 
+ *              if the log4j2 object structure doesn't match expected properties format;
+ * @param appender appref for current logger object
+ */
     private void writeLogger (Log4j2Object start, Writer writer, String path, String appender) throws IOException {
         if (!start.getAttributes().isEmpty()) {
             for (Entry e : start.getAttributes().entrySet()) {
@@ -163,6 +210,14 @@ public class PropertiesWriter2 {
         }
     }
     
+    
+    /**
+ * returns approprite constant to be added to the properties output
+ * compensates for the way properties are read from XML file
+ * 
+ * @param  str string with current log4j2 object prefix
+ * @return     returns appropriate constant for given prefix
+ */
     private String nameHelper (String str) {
         if (!str.equals(Log4j2Constants.FILTERS) && !str.equals(Log4j2Constants.FAILOVERS)
                 && !str.equals(Log4j2Constants.PROPERTIES)) {
@@ -175,7 +230,14 @@ public class PropertiesWriter2 {
         }
         return "";
     }
-    
+   
+    /**
+ * returns type of appenderRef
+ * compensates for the way properties are read from XML file
+ * 
+ * @param  logger  logger object to be processed
+ * @return     returns type of appenderRef
+ */
     private String getLoggerSuffix (Log4j2Object logger) {
         String appenderRef = null;
         for (Log4j2Object obj : logger.getChildren()) {
@@ -199,6 +261,12 @@ public class PropertiesWriter2 {
         return null;
     }
     
+    /**
+ * Returns true if the input object is null or empty; false otherwise
+ * 
+ * @param  obj Log42j object to be checked
+ * @return     Returns true if the input object is null or empty; false otherwise
+ */
     private boolean isNullOrEmpty (Log4j2Object obj) {
         if (obj == null) {
             return true;
@@ -207,71 +275,4 @@ public class PropertiesWriter2 {
         }
         return false;
     }
-    
-    /*
-    
-    private void writeConfig (Writer writer) throws IOException {
-        for (Entry e : config.getAttributes().entrySet()) {
-            writer.write(e.getKey() + " = " + e.getValue() + "\n");
-        }
-    }
-    
-    private void writeCustomLevels(Writer writer) throws IOException {
-        if (customLevels != null) {
-            String path = "customLevel.";
-            if (customLevels.getChildren().size() > 1) {
-                int i = 1;
-                for (Log4j2Object o : customLevels.getChildren()) {
-                    for (Entry e : o.getAttributes().entrySet()) {
-                        writer.write(path + "." + i + e.getKey() + " = " + e.getValue() + "\n");
-                        i++;
-                    }
-                }
-            } else {
-                for (Entry e : customLevels.getAttributes().entrySet()) {
-                    writer.write(path + e.getKey() + " = " + e.getValue() + "\n");
-                }
-            }
-        }
-    }
-    
-    private void writeProperties (Writer writer) throws IOException {
-        if (properties != null) {
-            String path = "property.";
-            if (properties.getChildren().size() > 1) {
-                int i = 1;
-                for (Log4j2Object o : properties.getChildren()) {
-                    for (Entry e : o.getAttributes().entrySet()) {
-                        writer.write(path + "." + i + e.getKey() + " = " + e.getValue() + "\n");
-                        i++;
-                    }
-                }
-            } else {
-                for (Entry e : properties.getAttributes().entrySet()) {
-                    writer.write(path + e.getKey() + " = " + e.getValue() + "\n");
-                }
-            }
-        }
-    }
-    
-    private void writeFilters (Writer writer) throws IOException {
-        if (filters != null) {
-           String path = "filter.";
-            if (filters.getChildren().size() > 1) {
-                int i = 1;
-                for (Log4j2Object o : filters.getChildren()) {
-                    for (Entry e : o.getAttributes().entrySet()) {
-                        writer.write(path + "." + i + e.getKey() + " = " + e.getValue() + "\n");
-                        i++;
-                    }
-                }
-            } else {
-                for (Entry e : filters.getAttributes().entrySet()) {
-                    writer.write(path + e.getKey() + " = " + e.getValue() + "\n");
-                }
-            } 
-        }
-    }
-    
-    */
 }

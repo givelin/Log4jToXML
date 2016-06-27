@@ -30,20 +30,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Class dor writitn in properties data into xml 
+ * Class for saving properties data into an xml file 
  * @author Jakub
  */
 public class XMLWriter {
-    //class for writing data into file
     private static Document document;
     
     /**
-     * Class for creatin XML documet into file
+     * method for saving XML document in a file
      * @param output File where are data saved.
      * @param properties data input for xml document.
      */
     public static void writeData(File output, Properties properties) {
-        Set<String> propNames = properties.stringPropertyNames();
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
@@ -78,6 +76,11 @@ public class XMLWriter {
         }
     }
 
+    /**
+     * Adds children to the document element and returns them as a set
+     * @param properties input properties data
+     * @return set of the document element children
+     */
     private static Set<Element> setConfigurationChild(Properties properties) {
         Set<Element> childs = new HashSet<>();
         childs.add(CreateCustomLevels.createCustomLevels(document, properties));
@@ -89,6 +92,11 @@ public class XMLWriter {
         return childs;
     }
 
+    /**
+     * Sets attributes of the document element
+     * @param properties input properties data
+     * @param configuration configuration element
+     */
     private static void setConfigurationAttributes(Properties properties, Element configuration) {
         for (String attributeName : XMLConst.configAttributes) {
             if (properties.containsKey(attributeName)) {

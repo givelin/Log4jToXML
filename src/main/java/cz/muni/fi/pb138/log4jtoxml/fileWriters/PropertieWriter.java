@@ -40,9 +40,9 @@ public class PropertieWriter {
     
     /**
      * This static method takes data as object of java.util.Properties and
-     * save all data in file
+     * saves all data in file
      * 
-     * @param output File were ara data saved
+     * @param output File where ara the data saved
      * @param properties Object of java.util.Properties. This object contains all data.
      */
     public static void writeData(File output, Properties properties) {

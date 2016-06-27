@@ -45,7 +45,7 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
             
         Document doc = loader.getDOM();
         XMLNormalizator normalizator = new XMLNormalizator();
-        doc = normalizator.convert(doc);
+        doc = normalizator.removeNodeValues(doc);
         doc = normalizator.toConcise(doc);
         
         XMLValidatorImpl validator = new XMLValidatorImpl();

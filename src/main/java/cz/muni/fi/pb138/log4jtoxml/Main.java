@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pb138.log4jtoxml;
 
 import cz.muni.fi.pb138.log4jtoxml.impl.ConfigurationConverterFromPropToXml;
@@ -17,9 +12,14 @@ import java.util.Scanner;
  */
 
 
-//TODO - TEST - written on train...
 public class Main {
     
+/**
+ * Reads input from console and reads file specified by path given by user
+ * 
+ * @param  scan Scanner used to scan for user input
+ * @return      file that will be used as input for conversion
+ */
     private static File getInFile(Scanner scan) {
         File file;
         String path;
@@ -48,6 +48,12 @@ public class Main {
         return file;
     }
     
+    /**
+ * Creates a new file that is specified by path
+ * 
+ * @param  path path to the file that should be created
+ * @return      File created or original file if exists
+ */
     private static File createFile(String path) throws IOException {
         File file = new File(path);
         if (file.exists()) {
@@ -60,6 +66,13 @@ public class Main {
         return file;
     }
     
+    /**
+ * Reads input from console and reads file specified by path given by user
+ * 
+ * @param  scan Scanner used to scan for user input
+ * @param  inPath path to file that is used as input for conversion
+ * @return      file that will be used as output for conversion
+ */
     private static File getOutFile(Scanner scan, String inPath) {
         File file;
         String path;
@@ -116,7 +129,12 @@ public class Main {
         return file;
     }
     
-    
+    /**
+ * Returns the extension of a file
+ * 
+ * @param  path path to a file
+ * @return      extension of a file
+ */
     private static String getExtension(String path) {
         String extension = "";
 
@@ -128,6 +146,12 @@ public class Main {
         return extension;
     }
     
+    /**
+ * Returns path to a file without its extension
+ * 
+ * @param  path path to a file
+ * @return      path without extension
+ */
     private static String getPathWithoutExtension(String path) {
         String extension = "";
 
@@ -139,6 +163,13 @@ public class Main {
         return extension;
     }
     
+    
+    /**
+ * Reads input and output files from user input and converts log4j2 
+ * configuration from xml to properties and vice versa
+ * 
+ * @param  args not used
+ */
     public static void main(String[] args) {        
         File inFile;
         File outFile;

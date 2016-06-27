@@ -17,14 +17,26 @@ import org.w3c.dom.NodeList;
 /**
  *
  * @author Petr
+ * 
+ * Class for normalizing XML files. Can concert XML with node values to XML 
+ * with attributes that correspond to those values and convert strict XML to 
+ * concise form
  */
+
 public class XMLNormalizator {
+    
+    /**
+ * if the node is text node, removes it and adds attribude with its value 
+ * to the parent; if the node is an Element, calls the method on its children
+ * 
+ * @param  n node to be processed
+ */
     private void process(Node n) throws ValidationException{
         if (n.getNodeType() == Node.TEXT_NODE) {
             String text = n.getTextContent();
+            //delete whitespaces
             text = text.replaceAll("\\s+","");
             if (text.equals("")) {
-                //System.out.println(n.getNodeName() + " has no text");
                 return;
             }
             
@@ -32,13 +44,13 @@ public class XMLNormalizator {
             
             NamedNodeMap attributes = parent.getAttributes();
             if (attributes.getLength() > 1) {
-                System.out.println("more than one attribute in element with value");
+                System.err.println("more than one attribute in element with value");
                 
-                System.out.println(n.getNodeName());
-                System.out.println();
+                System.err.println(n.getNodeName());
+                System.err.println();
                 
                 for (int i = 0; i < attributes.getLength(); i++) {
-                    System.out.println(attributes.item(i).getNodeName() + "   :   " 
+                    System.err.println(attributes.item(i).getNodeName() + "   :   " 
                             + attributes.item(i).getNodeValue());
                     
                 }
@@ -54,7 +66,7 @@ public class XMLNormalizator {
                 </Properties>
                 */
                 parent.setAttribute("value", n.getTextContent());
-                parent.removeChild(n);
+                parent.removeChild(n); //removes node value element
             }
             
             if (attributes.getLength() == 0) {
@@ -88,8 +100,14 @@ public class XMLNormalizator {
         }
     }
     
-    //i guess this will actually modify the doc even if i dont return it
-    public Document convert(Document doc){
+    /**
+ * Removes nodes with node values from a XML document and replaces them 
+ * with attributes
+ * 
+ * @param  doc document to be converted
+ * @return     converted document
+ */
+    public Document removeNodeValues(Document doc){
         Node root = doc.getDocumentElement();
         try { 
             this.process(root);
@@ -101,6 +119,12 @@ public class XMLNormalizator {
         return doc;
     }
     
+    /**
+ * Transforms XML log4j2 configuration from strict to concise form
+ * 
+ * @param  doc document to be converted
+ * @return     converted document
+ */
     public Document toConcise (Document doc) {
         Set<Node> nodes = traverseNode(doc.getDocumentElement());
         for (Node n : nodes) {
@@ -116,6 +140,13 @@ public class XMLNormalizator {
         return doc;
     }
     
+    /**
+ * Returns all nodes that have an attribute named type;
+ * starts from a node and then calls itself on all its children
+ * 
+ * @param  start starting node of searching
+ * @return     set of nodes with attribute "type"
+ */
     private Set<Node> traverseNode (Node start) {
         if (start == null)
             return null;
