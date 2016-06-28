@@ -36,8 +36,8 @@ public class PropertiesWriter2 {
     
     private static final Map<String, String> POLICY_TYPES = new HashMap<String, String>(){
         {
-            put("TimeBasedTriggeringPolicy", "time.");
-            put("SizeBasedTriggeringPolicy", "size.");
+            put("TimeBasedTriggeringPolicy", "time");
+            put("SizeBasedTriggeringPolicy", "size");
             
         }
     };
@@ -133,6 +133,9 @@ public class PropertiesWriter2 {
         
         if (name.contains("Filter") || name.equals("Marker")) { //stupid special cases
             String prefix = FILTER_TYPES.get(name);
+            if (prefix == null){ //unknown filter
+                prefix = name.toLowerCase();
+            }
             path+=prefix+".";
             writer.write(path.toLowerCase() + "type" + " = " + name + "\n");
         }
@@ -227,8 +230,21 @@ public class PropertiesWriter2 {
                     String help = nameHelper(name);
                     str += help;
                     if (name.toLowerCase().contains(Log4j2Constants.FILTER)) {
-                        System.err.println("here");
-                        str += "."+FILTER_TYPES.get(name);
+                        String prefix = FILTER_TYPES.get(name);
+                        if (prefix == null){ //unknown filter
+                            prefix = name.toLowerCase();
+                        }
+                        
+                        str += "."+prefix;
+                    }
+                    
+                    if (name.toLowerCase().contains(Log4j2Constants.POLICY)) {
+                        String prefix = POLICY_TYPES.get(name);
+                        if (prefix == null){ //unknown filter
+                            prefix = name.toLowerCase();
+                        }
+                        
+                        str += "."+prefix;
                     }
                     
                                         
@@ -318,6 +334,9 @@ public class PropertiesWriter2 {
                 return Log4j2Constants.FILTER;
             } else if (str.toLowerCase().contains(Log4j2Constants.LAYOUT)) {
                 return Log4j2Constants.LAYOUT;
+            }
+            else if (str.toLowerCase().contains(Log4j2Constants.POLICY)) {
+                return Log4j2Constants.POLICY;
             }
             return str;
         }

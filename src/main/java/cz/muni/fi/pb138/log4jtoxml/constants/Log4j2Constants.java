@@ -45,6 +45,7 @@ public class Log4j2Constants {
     public static final String SCHEMA="schema";
     public static final String[] configAttributes = {PACKAGES,STATUS,SCRIPT,NAME,ADVERTISER,SCHEMA};
     public static final String LAYOUT="layout";
+    public static final String POLICY="policy";
     public static final String FAILOVERS="Failovers";
     //configuration childs
     public static final String CUSTOM_LEVELS = "CustomLevels";
