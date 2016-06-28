@@ -26,6 +26,17 @@ import org.w3c.dom.NodeList;
 public class XMLNormalizator {
     
     /**
+     * method to unify separate methods in this XMLNormalizator,
+     * firstly, it removes text nodes from document, then it transforms
+     * the xml to concise format of log4j2
+     * @param doc Document loaded from input file
+     * @return    normalized XML doc
+     */
+    private Document normalizeXML (Document doc) {
+        return toConcise(removeNodeValues(doc));
+    }
+    
+    /**
  * if the node is text node, removes it and adds attribude with its value 
  * to the parent; if the node is an Element, calls the method on its children
  * 

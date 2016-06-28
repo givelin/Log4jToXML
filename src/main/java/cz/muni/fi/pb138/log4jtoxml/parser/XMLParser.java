@@ -5,148 +5,152 @@
  */
 package cz.muni.fi.pb138.log4jtoxml.parser;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.APPENDERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.CUSTOM_LEVELS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTER;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.FILTERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.LOGGERS;
+import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.PROPERTIES;
+import static cz.muni.fi.pb138.log4jtoxml.constants.XMLConst.THRESHOL_FILTER;
+import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
+import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2ObjectList;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.ValidationException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  *
- * @author Petr
+ * @author tomf
  */
 public class XMLParser {
     private Document doc;
-    private Properties prop = new Properties();
-    private enum XMLSkip {Configuration, Appenders};
+    private Log4j2Object config;
+    private Log4j2Object customLevels;
+    private Log4j2Object properties;
+    private Log4j2Object appenders;
+    private Log4j2Object loggers;
+    private Log4j2Object filters;
+    //private Log4j2Object thresholdFilter;
     
-    private static Document loadXML(File xmlFile) throws SAXException, ParserConfigurationException, IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(xmlFile);
+    
+    public XMLParser (Document doc) {
+        this.doc = doc;
+        config = new Log4j2Object();
+        customLevels = new Log4j2Object();
+        properties = new Log4j2Object();
+        appenders = new Log4j2Object();
+        loggers = new Log4j2Object();
+        filters = new Log4j2Object();
     }
     
-    public Properties loadAndSave(File xmlFile){
-        try{
-            this.doc = loadXML(xmlFile);
-        }
-        catch(SAXException | ParserConfigurationException | IOException e)
-        {
-        
-        }
-        
+    public Log4j2ObjectList parse () {
         Element root = doc.getDocumentElement();
-        try{
-        this.processChildren(root, "");
+        parseConfig(root);
+        NodeList children = root.getChildNodes();
+        for (int i=0; i<children.getLength(); i++) {
+            if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                //System.out.println(children.item(i).getNodeName());
+                String str = children.item(i).getNodeName();
+                if (str.equals(CUSTOM_LEVELS)) {
+                    customLevels = parseNode(children.item(i));
+                } else if (str.equals(PROPERTIES)) {
+                    properties = parseNode(children.item(i));
+                } else if (str.toLowerCase().contains(FILTER)) {
+                    filters = parseNode(children.item(i));
+                } else if (str.equals(APPENDERS)) {
+                    appenders = parseNode(children.item(i));
+                } else if (str.equals(LOGGERS)) {
+                    loggers = parseNode(children.item(i));
+                } else {
+                    System.err.println(children.item(i).getNodeName());
+                    throw new IllegalArgumentException();
+                }
+            }
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        
-
-            return prop;
-        }
+        /*
+        ArrayList<Log4j2Object> result = new ArrayList<>();
+        result.add(config);
+        result.add(customLevels);
+        result.add(properties);
+        //result.add(thresholdFilter);
+        result.add(filters);
+        result.add(appenders);
+        result.add(loggers);
+        */
+        Log4j2ObjectList result = new Log4j2ObjectList(config, customLevels, properties, filters, appenders, loggers);
+        return result;
+    }
     
-    //predpokladam, ze properties v sobe maji jen <property name="...">value</..>
-    private void processProperties(Element properties) throws ValidationException{
+    private void parseConfig (Node node) {
+        config = new Log4j2Object();
+        if (node.hasAttributes()) {
+            for (int i=0; i<node.getAttributes().getLength(); i++) {
+                Node att = node.getAttributes().item(i);
+                config.addAttribute(att.getNodeName(), att.getNodeValue());
+            }
+        }
+    }
+    
+    /*
+    private Log4j2Object processProperties(Element properties) {
+        Log4j2Object o = new Log4j2Object();
+        o.setName(properties.getNodeName());
+        
         NodeList property = properties.getElementsByTagName("Property");
         for (int i = 0; i < property.getLength(); i++) {
+            Log4j2Object child = new Log4j2Object();
             Element prop = (Element)property.item(i);
             
             NamedNodeMap attributes = prop.getAttributes();
-            if (attributes.getLength() > 1) {
-                System.out.println(">1");
-                throw new ValidationException("unexpected number of attributes in property (>1)");
+            //predpokladam, ze properties v sobe maji jen <property name="..." value="..." />
+            if (attributes.getLength() != 2) {
+                //System.err.println("!=2");
+                continue;
             }
             
-            Node att = attributes.item(0);
-            String attName = att.getNodeName();  
-            String attVal = att.getNodeValue();
+            Node attName = attributes.item(0);
             
-            if (!attName.equals("name")) {
-                System.out.println("name");
-                throw new ValidationException("property attribute isn't name");
+            if (!attName.getNodeName().equals("name")) {
+                System.err.println("name");
+                continue;
             }
-            this.prop.setProperty("property."+attVal, prop.getTextContent());
-            System.out.println("property."+attVal + " = " + prop.getTextContent());
-
+            
+            Node attVal = attributes.item(1);
+            if (!attVal.getNodeName().equals("value")) {
+                System.err.println("value");
+                continue;
+            }
+            
+            child.addAttribute(attName.getNodeValue(), attVal.getNodeValue());
+            o.addChild(child);
         }
+               
+        return o;
     }
-    
-    private void processChildren(Node n, String path) throws ValidationException{
-        if (n.getNodeName().equals("Properties")) {
-            
-            this.processProperties((Element)n);
-            return;
-        }
-        
-        if (!n.getNodeName().equals("Configuration")) {     
-            NamedNodeMap attributes = n.getAttributes();
-            for (int i = 0; i < attributes.getLength(); i++) {
-                String attName = attributes.item(i).getNodeName();
-                String attVal = attributes.item(i).getNodeValue();
-                
-                //tenhle if muzu pak smazat, ono to uklada pokazdy spravne, jen vypis byl mimo
-                if(path.equals("")) {
-                    this.prop.setProperty(path+attName, attVal);   
-                    System.out.println(path+attName + " = " + attVal);
-                }
-                else {
-                    this.prop.setProperty(path+attName, attVal);   
-                    System.out.println(path+"."+attName + " = " + attVal);
-                }
-                    
+    */
+    private Log4j2Object parseNode (Node node) {
+        Log4j2Object o = new Log4j2Object();
+        o.setName(node.getNodeName());
+        if (node.hasAttributes()) {
+            for (int i=0; i<node.getAttributes().getLength(); i++) {
+                Node att = node.getAttributes().item(i);
+                o.addAttribute(att.getNodeName(), att.getNodeValue());
             }
         }
-        else {
-            //get only status and name attributes for now - there might be many more needed, idk
-            Node status = n.getAttributes().getNamedItem("status");
-            if (status != null) {
-                 this.prop.setProperty("status", status.getNodeValue());
-                 System.out.println("status = " + status.getNodeValue());
-            }
-            
-            Node name = n.getAttributes().getNamedItem("name");
-            if (name != null) {
-                this.prop.setProperty("name", name.getNodeValue());
-                System.out.println("name = " + name.getNodeValue());
-            }          
-        }
-        
-        NodeList children = n.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node node = children.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (skip(node.getNodeName())) {
-                    processChildren(node, path);
-                }
-                else {
-                    if (path.equals(""))
-                        processChildren(node, node.getNodeName());
-                    else
-                        processChildren(node, path+"."+node.getNodeName());
+        if (node.hasChildNodes()) {
+            NodeList children = node.getChildNodes();
+            for (int i=0; i<children.getLength(); i++) {
+                if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Log4j2Object child = parseNode(children.item(i));
+                    o.addChild(child);
                 }
             }
-            
-    }
-    }
-    
-    private boolean skip(String s) {
-    for (XMLSkip skip : XMLSkip.values()) {
-        if (skip.name().equals(s)) {
-            return true;
         }
-    }
-    return false;
+        return o;
     }
 }
-

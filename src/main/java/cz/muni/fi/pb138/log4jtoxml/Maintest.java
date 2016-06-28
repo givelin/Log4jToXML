@@ -6,9 +6,9 @@
 package cz.muni.fi.pb138.log4jtoxml;
 
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
-import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter2;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter;
 import cz.muni.fi.pb138.log4jtoxml.impl.XMLValidatorImpl;
-import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser3;
+import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,15 +21,15 @@ import org.xml.sax.SAXException;
  */
 public class Maintest {
     public static void main(String[] args) throws FileNotFoundException, ParserConfigurationException, IOException, SAXException {
-        /*
+        
         XMLValidatorImpl val = new XMLValidatorImpl();
-        System.out.println(val.isXMLFileValid(new File("log4j2xsdtest.xml")));
-        */
+        System.out.println(val.isXMLFileValid(new File("xmlTest1.xml")));
+        
         /*
-        InputLoader in = new InputLoader("testXML.xml");
-        XMLParser3 par = new XMLParser3(in.getDOM());
-        PropertiesWriter2 wr = new PropertiesWriter2(par.parse());
-        wr.writeData("testXMLresult.properties");
+        InputLoader in = new InputLoader("xmlTest1.xml");
+        XMLParser par = new XMLParser(in.getDOM());
+        PropertiesWriter wr = new PropertiesWriter(par.parse());
+        wr.writeData(new File("xmlTest1result.properties"));
         */
     }
 }

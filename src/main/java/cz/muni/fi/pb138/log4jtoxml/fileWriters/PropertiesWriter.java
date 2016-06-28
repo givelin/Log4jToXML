@@ -7,6 +7,7 @@ package cz.muni.fi.pb138.log4jtoxml.fileWriters;
 
 import cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants;
 import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2Object;
+import cz.muni.fi.pb138.log4jtoxml.prop.Log4j2ObjectList;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +26,7 @@ import java.util.Map.Entry;
  * 
  * @author tomf
  */
-public class PropertiesWriter2 {
+public class PropertiesWriter {
     //objects that hold information about main configuration elements
     private Log4j2Object config;
     private Log4j2Object customLevels;
@@ -71,14 +72,44 @@ public class PropertiesWriter2 {
  *              4:appenders
  *              5:loggers
  */
-    public PropertiesWriter2 (List<Log4j2Object> init) {
-        config = init.get(0);
-        customLevels = init.get(1);
-        properties = init.get(2);
-        filters = init.get(3);
-        appenders = init.get(4);
-        loggers = init.get(5);
+    /*
+    public PropertiesWriter(List<Log4j2Object> init) {
+        if (!(init == null) && !(init.isEmpty()) && (init.size() == 6)) {
+            config = init.get(0);
+            customLevels = init.get(1);
+            properties = init.get(2);
+            filters = init.get(3);
+            appenders = init.get(4);
+            loggers = init.get(5);
+        } else {
+            throw new IllegalArgumentException("recieved empty, null or incomplete data list");
+        }
     }
+    */
+    
+    /**
+     * Constructor used in conjuction with xmlParser class
+     * @param input 
+     */
+    public PropertiesWriter (Log4j2ObjectList input) {
+        if (input != null) {
+            if (input.getConfiguration() != null)
+                config = input.getConfiguration();
+            if (input.getCustomLevels() != null)
+                customLevels = input.getCustomLevels();
+            if (input.getProperties() != null)
+                properties = input.getProperties();
+            if (input.getFilters() != null)
+                filters = input.getFilters();
+            if (input.getAppenders() != null)
+                appenders = input.getAppenders();
+            if (input.getLoggers() != null) 
+                loggers = input.getLoggers();
+        } else {
+            throw new IllegalArgumentException("recieved empty, null or incomplete Log4j2ObjectList");
+        }
+    }
+    
     
     /**
  * Writes a properties file

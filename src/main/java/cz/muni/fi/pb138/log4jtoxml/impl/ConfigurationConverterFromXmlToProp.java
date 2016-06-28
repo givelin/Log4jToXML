@@ -4,8 +4,8 @@ import cz.muni.fi.pb138.log4jtoxml.ConfigurationConverter;
 import cz.muni.fi.pb138.log4jtoxml.XMLNormalizator;
 import cz.muni.fi.pb138.log4jtoxml.XMLValidator;
 import cz.muni.fi.pb138.log4jtoxml.fileReaders.InputLoader;
-import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter2;
-import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser3;
+import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter;
+import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -50,8 +50,8 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         
         
         
-        XMLParser3 parser = new XMLParser3(doc);
-        PropertiesWriter2 writer = new PropertiesWriter2(parser.parse());
+        XMLParser parser = new XMLParser(doc);
+        PropertiesWriter writer = new PropertiesWriter(parser.parse());
         writer.writeData(output);
         }
         catch (ParserConfigurationException | IOException | SAXException e) {

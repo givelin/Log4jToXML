@@ -101,8 +101,10 @@ public class Log4j2Object {
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        // WARNING - TO BE EXAMINED LATER
         if (!Objects.equals(this.attributes, other.attributes)) {
+            return false;
+        }
+        if (!Objects.equals(this.children, other.children)) {
             return false;
         }
         return true;

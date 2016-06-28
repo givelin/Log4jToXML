@@ -5,6 +5,7 @@ import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.NAME;
 import static cz.muni.fi.pb138.log4jtoxml.constants.Log4j2Constants.STATUS;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
@@ -51,7 +52,7 @@ public class XMLWriterTest {
         
         XMLWriter.writeData(testFile, prop);
         try {
-            List<String> lines = Files.readAllLines(testFile.toPath());
+            List<String> lines = Files.readAllLines(testFile.toPath(), StandardCharsets.UTF_8);
             assertNotNull(lines);
             //it is generetaed like one line xml doc
             assertEquals(1, lines.size());
