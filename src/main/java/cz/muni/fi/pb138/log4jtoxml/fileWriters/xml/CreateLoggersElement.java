@@ -92,7 +92,10 @@ public class CreateLoggersElement {
         Element rootLogger = document.createElement(XMLConst.ROOT);
         rootLogger.setAttribute("level", properties.getProperty(Log4j2Constants.ROOT_LOGGER+".level"));
         //add AppendeerRef
-        rootLogger.appendChild(createAppenderRef(document, properties, Log4j2Constants.ROOT_LOGGER));
+        Element appenderRef = createAppenderRef(document, properties, Log4j2Constants.ROOT_LOGGER);
+        if (appenderRef != null) {
+            rootLogger.appendChild(appenderRef);
+        }
         return rootLogger;
     }
     

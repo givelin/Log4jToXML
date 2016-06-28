@@ -42,6 +42,9 @@ public class XMLWriter {
      * @param properties data input for xml document.
      */
     public static void writeData(File output, Properties properties) {
+        if(!output.getName().endsWith("xml")) {
+            throw new IllegalArgumentException("Wrong fily type!");
+        }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;

@@ -46,6 +46,9 @@ public class PropertieWriter {
      * @param properties Object of java.util.Properties. This object contains all data.
      */
     public static void writeData(File output, Properties properties) {
+        if(!output.getName().endsWith("properties")) {
+            throw new IllegalArgumentException("Output is not properties file");
+        }
         try {
             properties.store(new FileOutputStream(output), null);
         } catch (FileNotFoundException ex) {
