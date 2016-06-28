@@ -25,10 +25,21 @@ public class XMLWriterTest {
         assertNotNull(testFile);
     }
     
-    @Test(expected = NullPointerException.class)
+    @Test
     public void emptyXMLWrite() {
         Properties prop = new Properties();
         XMLWriter.writeData(testFile, prop);
+        try {
+            List<String> lines = Files.readAllLines(testFile.toPath());
+            assertNotNull(lines);
+            //it is generetaed like one line xml doc
+            assertEquals(1, lines.size());
+            String sub = "<Configuration>";
+            assertTrue(lines.get(0).contains(sub.subSequence(0, sub.length())));
+            assertTrue(lines.get(0).endsWith("</Configuration>"));
+        } catch (IOException ex) {
+            Logger.getLogger(PropertieWriterTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Test(expected = NullPointerException.class)
