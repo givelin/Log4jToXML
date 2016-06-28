@@ -25,6 +25,32 @@
                     <xs:element name="TimeFilter" type="TimeFilterType"/>
                 </xs:choice>
             </xs:choice>
+            <xs:choice minOccurs="0" maxOccurs="1">
+            	<xs:element name="Appenders" type="AppendersType"/>
+            	<xs:choice minOccurs="0" maxOccurs="1">
+    		    <xs:element name="Async" type="AsyncAppenderType"/>
+	            <xs:element name="Console" type="ConsoleAppenderType"/>
+	            <xs:element name="Failover" type="FailoverAppenderType"/>
+	            <xs:element name="File" type="FileAppenderType"/>
+	            <xs:element name="Flume" type="FlumeAppenderType"/>
+	            <xs:element name="JDBC" type="JDBCAppenderType"/>
+	            <xs:element name="JMS" type="JMSAppenderType"/>
+	            <xs:element name="JPA" type="JPAAppenderType"/>
+	            <xs:element name="Kafka" type="KafkaAppenderType"/>
+	            <xs:element name="List" type="ListAppenderType"/>
+	            <xs:element name="MemoryMappedFile" type="MemoryMappedFileAppenderType"/>
+	            <xs:element name="NoSQL" type="NoSQLAppenderType"/>
+	            <xs:element name="RandomAccessFile" type="RandomAccessFileAppenderType"/>
+	            <xs:element name="Rewrite" type="RewriteAppenderType"/>
+	            <xs:element name="RolingFile" type="RolingFileAppenderType"/>
+	            <xs:element name="RollingRandomAccessFile" type="RollingRandomAccessFileAppenderType"/>
+	            <xs:element name="Routing" type="RoutingAppenderType"/>
+	            <xs:element name="Socket" type="SocketAppenderType"/>
+	            <xs:element name="STMP" type="STMPAppenderType"/>
+	            <xs:element name="Syslog" type="SyslogAppenderType"/>
+	            <xs:element name="JeroMQ" type="JeroMQAppenderType"/>
+            	</xs:choice>
+            </xs:choice>
             <xs:element name="Appenders" type="AppendersType"/>
             <xs:element name="Loggers" type="LoggersType"/>
         </xs:sequence>
