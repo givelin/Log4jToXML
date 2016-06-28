@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -31,6 +33,29 @@ public class PropertiesWriter2 {
     private Log4j2Object appenders;
     private Log4j2Object loggers;
     private Log4j2Object filters;
+    
+    private static final Map<String, String> POLICY_TYPES = new HashMap<String, String>(){
+        {
+            put("TimeBasedTriggeringPolicy", "time.");
+            put("SizeBasedTriggeringPolicy", "size.");
+            
+        }
+    };
+    
+    private static final Map<String, String> FILTER_TYPES = new HashMap<String, String>(){
+        {
+            put("ThreadContextMapFilter", "mdc");
+            put("ThresholdFilter", "threshold");
+            put("ScriptFilter", "script");
+            put("MarkerFilter", "marker");
+            put("Marker", "marker");
+            //filter prefixes below this are made up, couldnt find any example anywhere
+            put("DynamicThresholdFilter", "dtc"); 
+            put("BurstFilter", "burst");
+            
+        }
+        
+    };
     
     /**
  * Constructor. Loads input objects from provided list
@@ -76,11 +101,11 @@ public class PropertiesWriter2 {
             }
             if (!isNullOrEmpty(filters)) {
                 if (filters.getChildren().isEmpty()) {
-                    writeDeep(filters, writer, "filter.");
+                    writeFilter(filters, writer, "filter.");
                     writer.write("\n");
                 } 
                 else {
-                    writeDeep(filters, writer, "");
+                    writeFilter(filters, writer, "filter.");
                     writer.write("\n");
                 }
             }
@@ -91,6 +116,53 @@ public class PropertiesWriter2 {
             if (!isNullOrEmpty(loggers)) {
                 writeLogger(loggers, writer, "", "");
                 writer.write("\n");
+            }
+        }
+    }
+    
+    private void writeFilter (Log4j2Object start, Writer writer, String path) throws IOException {
+        String name = start.getName();
+        if (name.equals("Filters")) {
+            if (!start.getChildren().isEmpty()) { 
+                for (Log4j2Object obj: start.getChildren()) {
+                    writeFilter(obj, writer, path);
+                }
+            }
+            return;
+        }
+        
+        if (name.contains("Filter") || name.equals("Marker")) { //stupid special cases
+            String prefix = FILTER_TYPES.get(name);
+            path+=prefix+".";
+            writer.write(path.toLowerCase() + "type" + " = " + name + "\n");
+        }
+        
+        //write all attributes of current level
+        if (!start.getAttributes().isEmpty()) {
+            if (start.getName().toLowerCase().equals("keyvaluepair")) { //special case
+                String keyPath = path.toLowerCase();
+                keyPath = keyPath.substring(0, keyPath.lastIndexOf("keyvaluepair")) + "pair.";
+                writer.write(keyPath + "type = KeyValuePair\n"); //suggests there are other types, none that i know of though
+                
+                for (Entry e : start.getAttributes().entrySet()) {
+                    writer.write(keyPath + e.getKey() + " = " + e.getValue() + "\n");
+                } 
+            }
+            else {
+                for (Entry e : start.getAttributes().entrySet()) {
+                    writer.write(path.toLowerCase() + e.getKey() + " = " + e.getValue() + "\n");
+                } 
+            }
+        }
+        
+        //call itself for all children in deeper level
+        if (!start.getChildren().isEmpty()) { 
+            for (Log4j2Object obj: start.getChildren()) {
+                String str = "";
+                if (obj.getName() != null) {
+                    str = obj.getName() + ".";
+                }
+                writeFilter(obj, writer, path + str);
             }
         }
     }
@@ -144,19 +216,27 @@ public class PropertiesWriter2 {
         //call itself for all children in deeper level
         if (!start.getChildren().isEmpty()) { 
             for (Log4j2Object obj: start.getChildren()) {
+                String name = obj.getName();
                 String str = "";
-                if (obj.getName() != null) {
+                if (name != null) {
                     if (path.equals("appender.")) {
                         //this compensates for the way Log4j2 objects are read from XML
-                        obj.addAttribute("type", obj.getName());
+                        obj.addAttribute("type", name);
                     }
                     
-                    str += nameHelper(obj.getName());
+                    String help = nameHelper(name);
+                    str += help;
+                    if (name.toLowerCase().contains(Log4j2Constants.FILTER)) {
+                        System.err.println("here");
+                        str += "."+FILTER_TYPES.get(name);
+                    }
                     
+                                        
                     //inserts type to the output at the appropriate location
                     if (!obj.getName().equals(str) && !str.equals("")) {
-                        int stopper = obj.getName().toLowerCase().indexOf(str);
-                        obj.addAttribute("type", obj.getName().substring(0, stopper));
+                        //int stopper = obj.getName().toLowerCase().indexOf(str);
+                        //obj.addAttribute("type", obj.getName().substring(0, stopper)); this was wrong anyway
+                        obj.addAttribute("type", obj.getName());
                     }
                     if (!str.equals(""))
                        str += ".";
@@ -234,7 +314,7 @@ public class PropertiesWriter2 {
     private String nameHelper (String str) {
         if (!str.equals(Log4j2Constants.FILTERS) && !str.equals(Log4j2Constants.FAILOVERS)
                 && !str.equals(Log4j2Constants.PROPERTIES)) {
-            if (str.toLowerCase().contains(Log4j2Constants.FILTER)) {               
+            if (str.toLowerCase().contains(Log4j2Constants.FILTER)) {
                 return Log4j2Constants.FILTER;
             } else if (str.toLowerCase().contains(Log4j2Constants.LAYOUT)) {
                 return Log4j2Constants.LAYOUT;

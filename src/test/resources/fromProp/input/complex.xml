@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp" packages="">
+  <Filters>
+    <Marker marker="EVENT" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+    <DynamicThresholdFilter key="loginId" defaultThreshold="ERROR"
+                            onMatch="ACCEPT" onMismatch="NEUTRAL">
+      <KeyValuePair key="User1" value="DEBUG"/>
+    </DynamicThresholdFilter>
+  </Filters>
+  <Appenders>
+    <File name="Audit" fileName="logs/audit.log">
+      <PatternLayout>
+        <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+      </PatternLayout>
+    </File>
+    <RollingFile name="RollingFile" fileName="logs/app.log"
+                 filePattern="logs/app-%d{MM-dd-yyyy}.log.gz">
+      <BurstFilter level="INFO" rate="16" maxBurst="100"/>
+      <PatternLayout>
+        <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+      </PatternLayout>
+      <TimeBasedTriggeringPolicy />
+    </RollingFile>
+  </Appenders>
+  <Loggers>
+    <Logger name="EventLogger" level="info">
+      <AppenderRef ref="Audit"/>
+    </Logger>
+    <Root level="error">
+      <AppenderRef ref="RollingFile"/>
+    </Root>
+  </Loggers>
+</Configuration>
