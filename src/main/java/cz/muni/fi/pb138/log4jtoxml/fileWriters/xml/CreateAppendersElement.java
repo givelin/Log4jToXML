@@ -22,6 +22,7 @@ public class CreateAppendersElement {
      * @return Element - appender
      */
     public static Element createAppendersElement(Document document, Properties properties) {
+        
         Element appendersElement = document.createElement(XMLConst.APPENDERS);
         Set<String> propNames = properties.stringPropertyNames();
         Iterator<String> iterator = propNames.iterator();
@@ -41,16 +42,16 @@ public class CreateAppendersElement {
         return null;
     }
     private static Element createAppender(Document document, Properties properties, Set<String> propNames) {
+        
         String firstName = propNames.iterator().next();
         String[] splitName = firstName.split("\\.");
         String prefix = splitName[0]+"."+splitName[1];
-        
         Element appendeer = document.createElement(properties.getProperty(prefix+".type"));
         appendeer.setAttribute("name", properties.getProperty(prefix+".name"));
         if(propNames.contains(prefix+".fileName")) {
             appendeer.setAttribute("fileName", properties.getProperty(prefix+".fileName"));
         }
-        
+
         Element layout = appenderLayout(document, properties, propNames, prefix);
         if (layout != null) {
             appendeer.appendChild(layout);
@@ -60,7 +61,6 @@ public class CreateAppendersElement {
         if (policies != null) {
             appendeer.appendChild(policies);
         }
-        
         Element filters = appenderFilters(document, properties, propNames, prefix);
         if (filters != null) {
             appendeer.appendChild(filters);
@@ -220,6 +220,32 @@ public class CreateAppendersElement {
             return null;
         }
         
+        boolean containKeyPair = false;
+        for(String s : filterPropNames) {
+            if(s.startsWith(filterPrefix+".pair")) {
+                containKeyPair = true;
+                break;
+            }
+        }
+        if(containKeyPair) {
+            Element keyPair = document.createElement(properties.getProperty(filterPrefix+".pair.type"));
+            filterPropNames.remove(filterPrefix+".pair.type");
+            keyPair.setAttribute("key", properties.getProperty(filterPrefix+".pair.key"));
+            filterPropNames.remove(filterPrefix+".pair.key");
+            keyPair.setAttribute("value", properties.getProperty(filterPrefix+".pair.value"));
+            filterPropNames.remove(filterPrefix+".pair.value");
+            filterEl.appendChild(keyPair);
+        }
+        
+        Iterator<String> it = filterPropNames.iterator();
+        while (it.hasNext()) {
+            String current = it.next();
+            String attName = current.substring(filterPrefix.length()+1);
+            filterEl.setAttribute(attName, properties.getProperty(filterPrefix+"."+attName));
+            it.remove();
+        }
+        /*
+        
         filterEl.setAttribute("type", properties.getProperty(filterPrefix+".type"));
         filterPropNames.remove(filterPrefix+".type");
         if(filterPropNames.contains(filterPrefix+".level")) {
@@ -238,22 +264,8 @@ public class CreateAppendersElement {
             filterEl.setAttribute("onMismatch", properties.getProperty(filterPrefix+".onMismatch"));
             filterPropNames.remove(filterPrefix+".onMismatch");
         }
-        boolean containKeyPair = false;
-        for(String s : filterPropNames) {
-            if(s.startsWith(filterPrefix+".pair")) {
-                containKeyPair = true;
-                break;
-            }
-        }
-        if(containKeyPair) {
-            Element keyPair = document.createElement(properties.getProperty(filterPrefix+".pair.type"));
-            filterPropNames.remove(filterPrefix+".pair.type");
-            keyPair.setAttribute("key", properties.getProperty(filterPrefix+".pair.key"));
-            filterPropNames.remove(filterPrefix+".pair.key");
-            keyPair.setAttribute("value", properties.getProperty(filterPrefix+".pair.value"));
-            filterPropNames.remove(filterPrefix+".pair.value");
-            filterEl.appendChild(keyPair);
-        }
+*/
+        
         return filterEl;
     }
     
