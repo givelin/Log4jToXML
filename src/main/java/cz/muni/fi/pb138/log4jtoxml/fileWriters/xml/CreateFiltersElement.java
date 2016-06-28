@@ -50,6 +50,50 @@ public class CreateFiltersElement {
     }
     
     private static Element createFilter(Document document, Properties properties, Set<String> propNames) {
+        Element filterEl = document.createElement(XMLConst.FILTER);
+       
+        String[] splitSubName = propNames.iterator().next().split("\\.");
+        String filterPrefix = ""; // = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
+        int i = 0;
+        while (i<splitSubName.length && !splitSubName[i].equals("filter")) {
+            filterPrefix += splitSubName[i]+".";
+            i++;
+        }
+        if (i+1 < splitSubName.length) {
+            filterPrefix += splitSubName[i]+"."+splitSubName[i+1];
+        }
+        else {
+            return null;
+        }
+        
+        boolean containKeyPair = false;
+        for(String s : propNames) {
+            if(s.startsWith(filterPrefix+".pair")) {
+                containKeyPair = true;
+                break;
+            }
+        }
+        if(containKeyPair) {
+            Element keyPair = document.createElement(properties.getProperty(filterPrefix+".pair.type"));
+            propNames.remove(filterPrefix+".pair.type");
+            keyPair.setAttribute("key", properties.getProperty(filterPrefix+".pair.key"));
+            propNames.remove(filterPrefix+".pair.key");
+            keyPair.setAttribute("value", properties.getProperty(filterPrefix+".pair.value"));
+            propNames.remove(filterPrefix+".pair.value");
+            filterEl.appendChild(keyPair);
+        }
+        
+        Iterator<String> it = propNames.iterator();
+        while (it.hasNext()) {
+            String current = it.next();
+            String attName = current.substring(filterPrefix.length()+1);
+            filterEl.setAttribute(attName, properties.getProperty(filterPrefix+"."+attName));
+            it.remove();
+        }
+        
+        return filterEl;
+        
+        /*
         Element filter = document.createElement(XMLConst.FILTER);
         String firstName = propNames.iterator().next();
         String[] splitName = firstName.split("\\.");
@@ -86,6 +130,7 @@ public class CreateFiltersElement {
             filter.appendChild(keyPair);
         }
         return filter;
+        */
     }
     
     private static Set<String> getFiltersOfOneType(Set<String> names) {

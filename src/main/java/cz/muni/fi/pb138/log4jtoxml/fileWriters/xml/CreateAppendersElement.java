@@ -220,6 +220,8 @@ public class CreateAppendersElement {
             return null;
         }
         
+        System.out.println(filterPrefix);
+        
         boolean containKeyPair = false;
         for(String s : filterPropNames) {
             if(s.startsWith(filterPrefix+".pair")) {

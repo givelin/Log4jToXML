@@ -29,11 +29,6 @@ public class XMLValidatorImpl implements XMLValidator {
         String s = this.getClass().getResource("/config.xsd").toString().substring(5);
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            /*
-            String path = System.getProperty("user.dir"); //could not make any "loadResource" work
-            path += "\\src\\main\\java\\cz\\muni\\fi\\pb138\\log4jtoxml\\resources\\config.xsd";
-            File s = new File(path);
-            */
             
             Schema schema = factory.newSchema(new File (s));
             Validator validator = schema.newValidator();
