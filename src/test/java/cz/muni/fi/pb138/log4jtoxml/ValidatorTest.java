@@ -34,9 +34,9 @@ public class ValidatorTest {
         InputLoader loader = new InputLoader(xml);
         try {
         Document doc = loader.getDOM();
-        XMLNormalizator normalizator = new XMLNormalizator();
+        /*XMLNormalizator normalizator = new XMLNormalizator();
         doc = normalizator.removeNodeValues(doc);
-        doc = normalizator.toConcise(doc);
+        doc = normalizator.toConcise(doc);*/
         Assert.assertTrue(validator.isXMLFileValid(doc));
         }
         catch(IOException | ParserConfigurationException | SAXException e) {

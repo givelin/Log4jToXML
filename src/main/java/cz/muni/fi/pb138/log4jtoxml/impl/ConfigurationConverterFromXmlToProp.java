@@ -39,13 +39,16 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         try {
             
         Document doc = loader.getDOM();
-        XMLNormalizator normalizator = new XMLNormalizator();
-        doc = normalizator.removeNodeValues(doc);
-        doc = normalizator.toConcise(doc);
         
         validator = new XMLValidatorImpl();
         Boolean valid = validator.isXMLFileValid(doc);
         System.out.println(valid);
+        
+        XMLNormalizator normalizator = new XMLNormalizator();
+        doc = normalizator.removeNodeValues(doc);
+        doc = normalizator.toConcise(doc);
+        
+        
         
         XMLParser3 parser = new XMLParser3(doc);
         PropertiesWriter2 writer = new PropertiesWriter2(parser.parse());

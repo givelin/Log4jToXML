@@ -98,6 +98,7 @@ public class CreateFiltersElement {
         it = names.iterator(); //reset iterator
         while(it.hasNext()) {
             String n = it.next();
+            System.out.println(n);
             if(n.startsWith(splitName[0]+"."+splitName[1])) {
                 out.add(n);
                 it.remove();

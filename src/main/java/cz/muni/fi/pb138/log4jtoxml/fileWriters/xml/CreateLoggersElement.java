@@ -82,7 +82,7 @@ public class CreateLoggersElement {
         Iterator<String> iterator = propNames.iterator();
         while(iterator.hasNext()) {
             String name = iterator.next();
-            if(name.startsWith(prefix+".appenderRef"))
+            if(name.toLowerCase().startsWith(prefix+".appenderref"))
                 iterator.remove();
         }
                
@@ -134,6 +134,49 @@ public class CreateLoggersElement {
     }
     private static Element createLogFilter(Document document, Properties properties, Set<String> filterPropNames) {
         Element filterEl = document.createElement(XMLConst.FILTER);
+        
+        String[] splitSubName = filterPropNames.iterator().next().split("\\.");
+        String filterPrefix = ""; // = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2];
+        int i = 0;
+        while (i<splitSubName.length && !splitSubName[i].equals("filter")) {
+            filterPrefix += splitSubName[i]+".";
+            i++;
+        }
+        if (i+1 < splitSubName.length) {
+            filterPrefix += splitSubName[i]+"."+splitSubName[i+1];
+        }
+        else {
+            return null;
+        }
+        
+        boolean containKeyPair = false;
+        for(String s : filterPropNames) {
+            if(s.startsWith(filterPrefix+".pair")) {
+                containKeyPair = true;
+                break;
+            }
+        }
+        if(containKeyPair) {
+            Element keyPair = document.createElement(properties.getProperty(filterPrefix+".pair.type"));
+            filterPropNames.remove(filterPrefix+".pair.type");
+            keyPair.setAttribute("key", properties.getProperty(filterPrefix+".pair.key"));
+            filterPropNames.remove(filterPrefix+".pair.key");
+            keyPair.setAttribute("value", properties.getProperty(filterPrefix+".pair.value"));
+            filterPropNames.remove(filterPrefix+".pair.value");
+            filterEl.appendChild(keyPair);
+        }
+        
+        Iterator<String> it = filterPropNames.iterator();
+        while (it.hasNext()) {
+            String current = it.next();
+            String attName = current.substring(filterPrefix.length()+1);
+            filterEl.setAttribute(attName, properties.getProperty(filterPrefix+"."+attName));
+            it.remove();
+        }        
+        return filterEl;
+        
+        /*
+        Element filterEl = document.createElement(XMLConst.FILTER);
         String[] splitSubName = filterPropNames.iterator().next().split("\\.");
         String filterPrefix = splitSubName[0]+"."+splitSubName[1]+"."+splitSubName[2]+"."+splitSubName[3];
         
@@ -172,6 +215,7 @@ public class CreateLoggersElement {
             filterEl.appendChild(keyPair);
         }
         return filterEl;
+*/
     }
     
     private static Set<String> getLoggerFilterPropNames(Properties properties, String prefix) {
