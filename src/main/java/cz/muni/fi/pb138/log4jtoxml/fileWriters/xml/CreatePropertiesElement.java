@@ -31,7 +31,7 @@ public class CreatePropertiesElement {
                 String propName = name.substring(Log4j2Constants.PROPERTY.length()+1);
                 Element propElement = document.createElement(XMLConst.PROPERTY);
                 propElement.setAttribute("name", propName);
-                propElement.appendChild(document.createTextNode(properties.getProperty(name)));
+                propElement.setAttribute("value", properties.getProperty(name));
                 propertiesElement.appendChild(propElement);
             }
         }
