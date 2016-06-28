@@ -51,7 +51,6 @@
 	            <xs:element name="JeroMQ" type="JeroMQAppenderType"/>
             	</xs:choice>
             </xs:choice>
-            <xs:element name="Appenders" type="AppendersType"/>
             <xs:element name="Loggers" type="LoggersType"/>
         </xs:sequence>
         <xs:attribute name="advertiser" type="xs:string"/>
