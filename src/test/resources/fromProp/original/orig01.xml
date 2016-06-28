@@ -1,7 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
-    <root>
-        <level value="INFO" />
-        <appender-ref ref="console" />
-    </root>
-</log4j:configuration>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Configuration name="name" packages="jar" status="OUT"><Properties><Property name="name">random</Property><Property name="value">blabla</Property></Properties><Loggers><Root level=""/></Loggers><Appenders><Console name="STDOUT"/></Appenders></Configuration>

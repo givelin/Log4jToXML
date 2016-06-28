@@ -22,6 +22,7 @@ public abstract class ConfigurationConverterBaseTest {
                 //add logger
                 throw new NullPointerException("Output file on end. ");
             }
+            System.out.print(outputLine);
             Assert.assertEquals(originalLine, outputLine);
             
             originalLine = originalBuffer.readLine();
