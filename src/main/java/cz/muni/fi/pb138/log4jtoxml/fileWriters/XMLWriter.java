@@ -72,7 +72,7 @@ public class XMLWriter {
             // Output to console for testing
             // StreamResult result = new StreamResult(System.out);
             transformer.transform(source, result);
-            System.out.println("File saved!");
+            System.out.println("XML saved!");
         } catch (ParserConfigurationException | TransformerException ex) {
             ex.printStackTrace();
             Logger.getLogger(XMLWriter.class.getName()).log(Level.SEVERE, null, ex);

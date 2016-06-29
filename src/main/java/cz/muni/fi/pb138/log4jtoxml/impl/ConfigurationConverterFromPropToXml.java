@@ -39,7 +39,9 @@ public class ConfigurationConverterFromPropToXml implements ConfigurationConvert
                 
                 validator = new XMLValidatorImpl();
                 Boolean valid = validator.isXMLFileValid(output);
-                System.out.println(valid);
+                if (valid) {
+                    System.out.println("XML file valid");
+                }
         
             }
             catch(IOException e)

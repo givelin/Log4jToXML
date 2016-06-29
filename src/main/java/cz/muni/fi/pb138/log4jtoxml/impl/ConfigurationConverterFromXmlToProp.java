@@ -8,8 +8,6 @@ import cz.muni.fi.pb138.log4jtoxml.fileWriters.PropertiesWriter;
 import cz.muni.fi.pb138.log4jtoxml.parser.XMLParser;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -39,24 +37,27 @@ public class ConfigurationConverterFromXmlToProp implements ConfigurationConvert
         try {
             
         Document doc = loader.getDOM();
-        
-        validator = new XMLValidatorImpl();
-        Boolean valid = validator.isXMLFileValid(doc);
-        System.out.println(valid);
-        
         XMLNormalizator normalizator = new XMLNormalizator();
         doc = normalizator.removeNodeValues(doc);
         doc = normalizator.toConcise(doc);
+        validator = new XMLValidatorImpl();
+        Boolean valid = validator.isXMLFileValid(doc);
+        if (valid) {
+            System.out.println("XML file valid");
+        }
+        
+        
         
         
         
         XMLParser parser = new XMLParser(doc);
         PropertiesWriter writer = new PropertiesWriter(parser.parse());
         writer.writeData(output);
+        System.out.println("Properties saved.");
         }
         catch (ParserConfigurationException | IOException | SAXException e) {
-            Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, e);
-            System.out.printf("An error occured during conversion. We are sorry. Nothing can help you now.");
+            //Logger.getLogger(ConfigurationConverterFromPropToXml.class.getName()).log(Level.SEVERE, null, e);
+            System.out.printf("An error occured during conversion. Input file might be invalid - try again, please.");
         }
     }
     
