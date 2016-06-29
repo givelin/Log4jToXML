@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+                   "http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+<book lang="cs">
+    <bookinfo>
+        <title>Log4j2 XML Schéma</title>
+        <subtitle>Závěrečná Zpráva</subtitle>
+        <author>
+                <firstname>Karel</firstname>
+                <surname>Hanák</surname>
+        </author>
+    </bookinfo>
+    <chapter>
+        <title>Závěrečná zpráva</title>
+        <para>
+                Mým úkolem v projektu bylo:
+            <itemizedList>
+                <listitem>Validace vstupního xml dokumentu před převodem z xml do properties</listitem>
+                <listitem>Validace výstupního xml dokumentu po převodu z properties do xml</listitem>
+                <listitem>Tvorba xml schéma pro strict formát konfigurací</listitem>
+                <listitem>Tvorba xml schéma pro concise formát konfigurací</listitem>
+            </itemizedList>
+        </para>
+    </chapter>
+    <chapter>
+        <title>Zpracování</title>
+        <subtitle>Tvorba schéma a validace</subtitle>
+        <itemizedList>
+            <listitem>Základní schéma root elementu (configuration)</listitem>
+            <listitem>Konfigurace všech typů Appender, Filter, Layout a Logger entit</listitem>
+            <listitem>Konfigurace parametrů výše zmíněných entit Log4j2</listitem>
+            <listitem>Aplikování Filter a Layout entit jako omezení a rozšíření Appender a Logger entit</listitem>
+        </itemizedList>
+    </chapter>
+</book>
