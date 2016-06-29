@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+                   "http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+<book lang="cs">
+    <bookinfo>
+        <title>Log4j2 XML Schéma</title>
+        <subtitle>Závěrečná Zpráva</subtitle>
+        <author>
+                <firstname>Jakub</firstname>
+                <surname>Schwan</surname>
+        </author>
+    </bookinfo>
+    <chapter>
+        <title>Závěrečná zpráva</title>
+        <para>
+                Mým úkolem v projektu bylo:
+            <itemizedList>
+                <listitem>Obecný návrh řešení</listitem>
+                <listitem>Convertování configurace z properties do XML</listitem>
+                <listitem>Načítání properties souborů</listitem>
+                <listitem>Poskytnutí unit testů pro convertování prop - xml</listitem>
+		<listitem>Popis za pomocí javadoc mnou implementovaný kód</listitem>
+            </itemizedList>
+        </para>
+    </chapter>
+    <chapter>
+        <title>Zpracování</title>
+        <subtitle>Načítání properties souboru</subtitle>
+        <itemizedList>
+            <listitem>Pro jednoduchost práce s properties využita class java.util.Properties</listitem>
+            <listitem>Pro načítání použita metoda load, která načte data z InputReadru</listitem>
+        </itemizedList>
+	<subtitle>Convertování configurace prop - xml</subtitle>
+        <itemizedList>
+            <listitem>Class XMLWriter - vytvoří root configurace, a hlavní hodnoty</listitem>
+            <listitem>Pro specifické nastavování configurace se volají metody pomocných tříd (např. CreateAppendersElement, CreatePropertiesElement, ...)</listitem>
+            <listitem>Pomocné třídy vytvoří Element daného nastavení a vrací jej do rootu (např. CreateAppendersElement - &lt;Appenders&gt;...&lt;/Appenders&gt;</listitem>
+            <listitem>Po vytvoření XML souboru validace za pomocí Validatoru</listitem>
+        </itemizedList>
+    </chapter>
+</book>
