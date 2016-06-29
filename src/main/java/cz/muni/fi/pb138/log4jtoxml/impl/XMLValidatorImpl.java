@@ -30,11 +30,15 @@ public class XMLValidatorImpl implements XMLValidator {
 
     @Override
     public boolean isXMLFileValid(File file) {
-        String s = this.getClass().getResource("/config.xsd").toString().substring(5);
+        File sch = this.getSchema();
+        if (sch == null) {
+            System.err.println("could not load schema");
+            return false;
+        }
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             
-            Schema schema = factory.newSchema(new File (s));
+            Schema schema = factory.newSchema(sch);
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(file));
         } catch (IOException e) {
