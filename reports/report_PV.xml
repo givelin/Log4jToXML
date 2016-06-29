@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+                   "http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+<book lang="cs">
+    <bookinfo>
+        <title>Log4j2 to XML</title>
+        <subtitle>Závìreèná Zpráva</subtitle>
+        <author>
+                <firstname>Petr</firstname>
+                <surname>Vacek</surname>
+        </author>
+    </bookinfo>
+    <chapter>
+        <title>Závìreèná zpráva</title>
+        <para>
+                Mým úkolem v projektu bylo:
+            <itemizedList>
+                <listitem>Main - získání vstupu od uživatele</listitem>
+                <listitem>pøevod XML s node values na XML, které má pouze atributy</listitem>
+                <listitem>Testování a debugování pøevodu</listitem>
+            </itemizedList>
+        </para>
+    </chapter>
+    <chapter>
+        <title>Zpracování</title>
+        <subtitle>pøevod na XML bez node values</subtitle>
+        <itemizedList>
+            <listitem>nalezení elementù s value</listitem>
+            <listitem>odstranìní a nahrazení atributem podle typu elementu</listitem>
+        </itemizedList>
+	<subtitle>Debugování</subtitle>
+        <itemizedList>
+            <listitem>Spuštìní pøevodu</listitem>
+            <listitem>Porovnání s dostupnými daty (pøevážnì bráno z GitHubu Log4j2)</listitem>
+            <listitem>Úprava kódu</listitem>
+ 	    <listitem>Spuštìní pøevodu</listitem>
+            <listitem>Porovnání s dostupnými daty</listitem>
+            <listitem>Úprava kódu</listitem>
+            <listitem>Spuštìní pøevodu</listitem>
+            <listitem>Porovnání s dostupnými daty</listitem>
+            <listitem>Úprava kódu</listitem>
+        </itemizedList>
+    </chapter>
+</book>
