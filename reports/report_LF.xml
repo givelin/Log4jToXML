@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+                   "http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+<book lang="sk">
+    <bookinfo>
+        <title>Log4j2 to XML</title>
+        <subtitle>Záverečná Správa</subtitle>
+        <author>
+                <firstname>Lukáš</firstname>
+                <surname>Farkaš</surname>
+        </author>
+    </bookinfo>
+    <chapter>
+        <title>Záverečná správa</title>
+        <para>
+                Mojou úlohou v projekte bolo:
+            <itemizedList>
+                <listitem>Parsovanie XML súboru</listitem>
+                <listitem>Výpis zparsovaného XML do properties súboru</listitem>
+                <listitem>Tvorba testov pre prevod XML na properties</listitem>
+            </itemizedList>
+        </para>
+    </chapter>
+    <chapter>
+        <title>Zpracovanie</title>
+        <subtitle>Parsovanie</subtitle>
+        <itemizedList>
+            <listitem>vytvorenie novej logickej štruktury (Log4j2Object) pre ukladanie dát</listitem>
+	    <listitem>rekurzívne prehliadanie vstupného XML dokumentu</listitem>
+            <listitem>načítanie jednotlivých blokov (Appenders, Loggers, ...) do štruktúr</listitem>
+        </itemizedList>
+	<subtitle>Vypisovanie</subtitle>
+        <itemizedList>
+ 	    <listitem>Postupný výpis blokov dát</listitem>
+            <listitem>Pre jednotlivé bloky osobitný výpis (každý blok má špecifický zápis)</listitem>        
+        </itemizedList>
+    </chapter>
+</book>
